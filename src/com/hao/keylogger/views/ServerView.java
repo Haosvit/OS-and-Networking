@@ -88,13 +88,16 @@ public class ServerView extends JFrame implements ActionListener, IServerView {
 		switch (source.getName()) {
 		case BTN_START_SERVER_NAME:
 			if (!isServerStarted) {
-				controller.startServer();
-				isServerStarted = true;
-				source.setText("Stop server");
+				if (controller.startServer()) {
+					isServerStarted = true;
+					source.setText("Stop server");
+				}
 			}
 			else {
-				isServerStarted = false;
-				source.setText("Start server");
+				if (controller.stopServer()) {
+					isServerStarted = false;
+					source.setText("Start server");
+				}
 			}
 			break;
 		}
@@ -122,8 +125,6 @@ public class ServerView extends JFrame implements ActionListener, IServerView {
 
 	@Override
 	public void appendToMonitor(String msg) {
-		ta_monitor.append(new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(new Date()));
-		ta_monitor.append("\n");
 		ta_monitor.append(msg);
 	}
 

