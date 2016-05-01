@@ -16,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -166,13 +167,13 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		
 		// center
 		ta_logView = new JTextArea(5,10);
-		
+		JScrollPane scrollPane = new JScrollPane(ta_logView);
 		// adding panels to main container
 		getContentPane().add(northPanel, "North");
-		getContentPane().add(ta_logView);
-		setVisible(true);
-
+		getContentPane().add(scrollPane);
+		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setVisible(true);
 	}
 
 	@Override

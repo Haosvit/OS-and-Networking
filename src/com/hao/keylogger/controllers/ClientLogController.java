@@ -14,7 +14,7 @@ public class ClientLogController {
 	private ClientView logView;
 	private Log log;
 	
-	UDPClientHelper udpHelper;
+	UDPClientHelper udpClientHelper;
 
 	public ClientLogController(ClientView logView, Log log) {
 		super();
@@ -49,8 +49,8 @@ public class ClientLogController {
 		String hostName = logView.getHost();
 		int port = logView.getPort();
 		try {
-			udpHelper = UDPClientHelper.getInstance(hostName, port);
-			udpHelper.connect();
+			udpClientHelper = UDPClientHelper.getInstance(hostName, port);
+			udpClientHelper.connect();
 			return true;
 		} catch (SocketException e) {
 			e.printStackTrace();
@@ -61,12 +61,12 @@ public class ClientLogController {
 	}
 	
 	public void fetchLog(Date date) throws NullPointerException {
-		log = udpHelper.fetchLog(date);
+		log = udpClientHelper.fetchLog(date);
 		loadView();
 	}
 	
 	public void fetchAllLogs() {
-		ArrayList<Log> logs = udpHelper.fetchAllLogs();
+		ArrayList<Log> logs = udpClientHelper.fetchAllLogs();
 		// load to view
 	}
 
