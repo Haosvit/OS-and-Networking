@@ -1,6 +1,5 @@
 package com.hao.keylogger.controllers.Client;
 
-import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -9,26 +8,29 @@ import java.util.Date;
 import javax.swing.JFrame;
 
 import com.hao.keylogger.models.Log;
+import com.hao.keylogger.models.Resource;
 import com.hao.keylogger.views.ClientView;
 
 public class ClientLogController {
-	private ClientView logView;
+	private ClientView view;
 	private Log log;
 	
 	UDPClientHelper udpClientHelper;
 
-	public ClientLogController(ClientView logView) {
+	public ClientLogController(ClientView view) {
 		super();
-		this.logView = logView;
-		this.logView.setController(this);
+		this.view = view;
+		this.view.setController(this);
+		this.view.setHost(UDPClientHelper.getLocalHostIP());
+		this.view.setPort(Resource.DEFAULT_PORT);
 	}
 
 	public JFrame getLogView() {
-		return logView;
+		return view;
 	}
 
 	public void setLogView(ClientView logView) {
-		this.logView = logView;
+		this.view = logView;
 	}
 
 	public Log getLog() {
@@ -39,33 +41,14 @@ public class ClientLogController {
 		this.log = log;
 	}
 
-	public void loadView() {
-		//logView.setHost(log.getHost());
-		//logView.setPort(log.getPort());
-		logView.setLogContent(log.getContent());
+	public void displayLog() {
+		view.setLogContent(log.getContent());
 	}
 
-	/*
-	public boolean connect() {
-		InetAddress hostName = logView.getHost();
-		int port = logView.getPort();
-		try {
-			udpClientHelper = UDPClientHelper.getInstance(hostName, port);
-			udpClientHelper.connect();
-			return true;
-		} catch (SocketException e) {
-			e.printStackTrace();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-	*/
-	
 	public void fetchLog(Date date) throws NullPointerException {
 		try {
-			log = new UDPClientHelper(logView.getHostAddress(), logView.getPort()).fetchLog(date);
-			loadView();
+			new UDPClientHelper(this, view.getHostAddress(), view.getPort()).fetchLog(date);
+			displayLog();
 		} catch (SocketException | UnknownHostException e) {
 			// TODO xử lý fetch không được log
 			e.printStackTrace();
@@ -76,6 +59,11 @@ public class ClientLogController {
 	public void fetchAllLogs() {
 		ArrayList<Log> logs = udpClientHelper.fetchAllLogs();
 		// load to view
+	}
+	
+	public void receiveLogFromServer(Log log) {
+		this.log = log;
+		displayLog();
 	}
 
 }

@@ -22,6 +22,7 @@ public class UDPClientHelper {
 	private InetAddress address;
 	private String hostName;
 	private int port;
+	ClientLogController controller;
 	
 	byte[] buffer = new byte[8096]; // 8KB 
 	
@@ -32,25 +33,12 @@ public class UDPClientHelper {
 	 * @throws SocketException
 	 * @throws UnknownHostException
 	 */
-	public UDPClientHelper(InetAddress inetAddress, int port) throws SocketException, UnknownHostException {
+	public UDPClientHelper(ClientLogController controller, InetAddress inetAddress, int port) throws SocketException, UnknownHostException {
 		socket = new DatagramSocket();
 		address = inetAddress;
 		this.port = port;
+		this.controller = controller;
 	}
-	/*
-	public static UDPClientHelper getInstance(InetAddress inetAddress, int port) {
-		if (instance == null) {
-			try {
-				instance = new UDPClientHelper(inetAddress, port);
-			} catch (SocketException e) {
-				e.printStackTrace();
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			}
-		}
-		return instance;
-	}
-	*/
 	
 	public DatagramSocket getSocket() {
 		return socket;
@@ -83,20 +71,22 @@ public class UDPClientHelper {
 	public void setPort(int port) {
 		this.port = port;
 	}
-	/*
-	public void connect() throws SocketException, UnknownHostException{
-			socket = new DatagramSocket();
-			address = InetAddress.getByName(hostName);
+	
+	public static String getLocalHostIP() {
+		try {
+			return InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			return "";
+		}
 	}
-	*/
 	/**
 	 * fetch a single log by specified date
 	 * @param date
-	 * @return
+	 * @return Log
 	 */
-	public Log fetchLog(Date date) {
+	public void fetchLog(Date date) {
 		// TODO get from server, convert to Log object, pass to controller
-		Log log = new Log();
 		//log.setContent(date.toString());
 		String msg = "Hi server";
 		DatagramPacket outPacket = new DatagramPacket(msg.getBytes(), msg.length(), address, port);
@@ -106,54 +96,68 @@ public class UDPClientHelper {
 			e.printStackTrace();
 		}
 		// waiting for the server message
-		String receiveMsg = receivePacket();
-		
-		log.setDateOfLog(date);
-		log.setHost(address);
-		log.setPort(port);
-		log.setContent(receiveMsg);
-		
-		return log;
+		Thread receiverThread = new Thread(new PacketReceiver(date));
+		receiverThread.start();
 	}
-	private String receivePacket() {
-		DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
-		String receiveMsg = "";
-		try {
-			socket.receive(inPacket);
-			receiveMsg = new String(inPacket.getData(), 0, inPacket.getLength());
-		}
-		catch (IOException ex) {
-			ex.printStackTrace();
-		}
-		return receiveMsg;
-	}
+	
+	/**
+	 * Receive message from server
+	 * @return String
+	 */
+
 	/**
 	 * get all logs stored on host
 	 * @return
 	 */
 	public ArrayList<Log> fetchAllLogs() {
 		ArrayList<Log> logs = new ArrayList<Log>();
-		logs.add(fetchLog(new Date()));
+		//logs.add(fetchLog(new Date()));
 		return logs;
 	}
-	/*
+	
+	/**
+	 * Receive packet from server
+	 * @author Hao Svit
+	 *
+	 */
 	private class PacketReceiver implements Runnable {
-		byte[] buffer = new byte[8096]; // 8KB 
-		@Override
-		public void run() {
-			DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
-			//while (true) {
-				try {
-					socket.receive(inPacket);
-					String inMsg = new String(inPacket.getData(), 0, inPacket.getLength());
-				}
-				catch (IOException ex) {
-					ex.printStackTrace();
-				}
-			//}
+		Date dateOfLog;
+		public PacketReceiver(Date date) {
+			this.dateOfLog = date;
 		}
 		
+		@Override
+		public void run() {
+		
+			try {
+				String receiveMsg = receivePacket();
+				
+				Log log = new Log();
+				log.setDateOfLog(dateOfLog);
+				log.setHost(address);
+				log.setPort(port);
+				log.setContent(receiveMsg);
+				
+				// pass the log back to controller
+				controller.receiveLogFromServer(log);
+			}
+			catch (Exception ex) {
+				
+			}
+			
+		}
+		
+		private String receivePacket() {
+			DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
+			String receiveMsg = "";
+			try {
+				socket.receive(inPacket);
+				receiveMsg = new String(inPacket.getData(), 0, inPacket.getLength());
+			}
+			catch (IOException ex) {
+				ex.printStackTrace();
+			}
+			return receiveMsg;
+		}
 	}
-*/
-	
 }

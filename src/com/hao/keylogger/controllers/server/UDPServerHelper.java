@@ -39,7 +39,7 @@ public class UDPServerHelper {
 			return InetAddress.getLocalHost().getHostAddress();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
-			return null;
+			return "";
 		}
 	}
 
@@ -70,21 +70,6 @@ public class UDPServerHelper {
 		this.controller = controller;
 	}
 
-	public void startListenning() {
-		// TODO làm đa luồng
-		// DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
-		// try {
-		// socket.receive(inPacket);
-		// String inMsg = new String(inPacket.getData(), 0,
-		// inPacket.getLength());
-		// System.out.println(inMsg);
-		// }
-		// catch (Exception e) {
-		//
-		// }
-
-	}
-	
 	private class PacketReceiver implements Runnable {
 		@Override
 		public void run() {
