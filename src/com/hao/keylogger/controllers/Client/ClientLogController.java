@@ -115,8 +115,11 @@ public class ClientLogController {
 	private void writeToFile(Log log) throws IOException {
 		String filePath = Resources.LOGS_CLIENT_DIRECTORY + File.separator + log.getName()
 				+ Resources.LOG_FILE_EXTENSION;
-		FileManager fm = new FileManager(filePath);
-		fm.writeToFile(log.getContent());
+		// FileManager fm = new FileManager(filePath);
+		// fm.writeToFile(log.getContent());
+
+		FileManager fm = new FileManager();
+		fm.writeLogToFile(log, filePath);
 	}
 
 	public void saveAllLogs() {
@@ -167,14 +170,8 @@ public class ClientLogController {
 		if (logFiles.length > 0) {
 			for (File f : logFiles) {
 				Log log = new Log();
-				FileManager fm = new FileManager(f.getPath());
-				String content = "";
-				try {
-					content = fm.readAll();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				log.setContent(content);
+				FileManager fm = new FileManager();
+				log = fm.loadLogFromFile(f.getPath());
 				logs.add(log);
 			}
 			updateViewWhenLogListChanged();
@@ -208,8 +205,7 @@ public class ClientLogController {
 				view.updateMenuItemWhenLoggerStart();
 				view.showInfoMessage("Key logger - Start logger", serverMsg);
 				isLoggerRunning = true;
-			}
-			else {
+			} else {
 				view.showErrorMessage("Key logger - Start logger", serverMsg);
 			}
 			break;
