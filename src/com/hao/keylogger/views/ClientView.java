@@ -4,6 +4,7 @@
 package com.hao.keylogger.views;
 
 import java.awt.Dimension;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -196,8 +197,10 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 
 		ta_logView = new JTextArea(5, 10);
 		ta_logView.setLineWrap(true);
+		ta_logView.setWrapStyleWord(true);
+		ta_logView.setEditable(false);
+		ta_logView.setMargin(new Insets(4, 4, 4, 4));
 		JScrollPane scrollPane = new JScrollPane(ta_logView);
-		
 		//TODO add status bar
 		
 		// adding panels to main container
@@ -254,6 +257,11 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 
 	public int getLogListSelectedIndex() {
 		return list_logList.getSelectedIndex();
+	}
+
+	public void scrollLogViewToTop() {
+		ta_logView.setCaretPosition(0);
+		
 	}
 
 }

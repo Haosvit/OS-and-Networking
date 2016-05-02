@@ -34,6 +34,7 @@ public class ClientLogController {
 	public void displayLog(int index) {
 		Log log = logs.get(index);
 		view.setLogContent(log.getContent());
+		view.scrollLogViewToTop();
 	}
 
 	public void fetchLog(Date date){

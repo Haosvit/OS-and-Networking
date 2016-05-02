@@ -77,6 +77,7 @@ public class ServerView extends JFrame implements ActionListener, IServerView {
 
 		// center
 		ta_monitor = new JTextArea(5, 10);
+		ta_monitor.setEditable(false);
 		JScrollPane scrollPane = new JScrollPane(ta_monitor);
 
 		// adding panels to main container
