@@ -14,21 +14,15 @@ public class FileManager {
 		this.filePath = filePath;
 	}
 	
-	public String read() {
+	public String readAll() throws IOException {
 		StringBuilder stb = new StringBuilder();
-		try {
 			InputStream fIn = new FileInputStream(filePath);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(fIn, Charset.forName("UTF-8")));
 			int readChar = 0;
 			char[] buf = new char[256];
 			while ((readChar = reader.read(buf)) != -1) {
 				stb.append(buf,0, readChar);
-			}			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+			}
 		return stb.toString();
 	}
 }

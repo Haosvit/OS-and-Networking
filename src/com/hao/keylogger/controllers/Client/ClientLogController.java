@@ -47,15 +47,16 @@ public class ClientLogController {
 
 	public void fetchLog(Date date){
 		try {
+			// the log will be displayed when it is fetched
 			new UDPClientHelper(this, view.getHostAddress(), view.getPort())
 			.fetchLog(date);
-			displayLog();
+			//displayLog();
 		} catch (SocketException | UnknownHostException e) {
 			view.showErrorMessage("Fetch log error", "Invalid host address or port!");
 			e.printStackTrace();
 		}
 		catch (NullPointerException ex) {
-			view.showErrorMessage("Fetch log error", "Can not fetch log! Server is not running!");
+			view.showErrorMessage("Fetch log error", "Can not fetch log!");
 		}
 		
 	}
@@ -65,6 +66,10 @@ public class ClientLogController {
 		// load to view
 	}
 	
+	/**
+	 * Display the fetched log to view
+	 * @param log
+	 */
 	public void receiveLogFromServer(Log log) {
 		this.log = log;
 		displayLog();

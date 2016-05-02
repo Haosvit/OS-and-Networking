@@ -163,6 +163,7 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		
 		// center
 		ta_logView = new JTextArea(5,10);
+		ta_logView.setLineWrap(true);
 		JScrollPane scrollPane = new JScrollPane(ta_logView);
 		
 		// adding panels to main container
@@ -179,6 +180,7 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		
 		switch (btn.getName()) {
 		case BTN_FETCH_LOG_NAME:
+				ta_logView.setText("");
 				controller.fetchLog(getDatePicked());
 			break;
 		case BTN_FETCH_ALL_LOG_NAME:

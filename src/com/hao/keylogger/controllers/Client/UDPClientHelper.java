@@ -28,7 +28,7 @@ public class UDPClientHelper {
 	private int port;
 	ClientLogController controller;
 	
-	byte[] buffer = new byte[8096]; // 8KB 
+	byte[] buffer = new byte[Resource.CLIENT_BUFFER_SIZE];
 	
 	/**
 	 * Create new socket
@@ -92,14 +92,17 @@ public class UDPClientHelper {
 	public void fetchLog(Date date) {
 		// TODO get from server, convert to Log object, pass to controller
 		String dateStr = new SimpleDateFormat("dd-MM-yyyy").format(date);
+		
 		String msg = Resource.FETCH_LOG_REQUEST + "?" + dateStr;
+		
 		DatagramPacket outPacket = new DatagramPacket(msg.getBytes(), msg.length(), address, port);
 		try {
 			socket.send(outPacket);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		// waiting for the server message
+		
+		// waiting for the server message, pass the log to controller when it is fetched
 		Thread receiverThread = new Thread(new PacketReceiver(date));
 		receiverThread.start();
 	}
