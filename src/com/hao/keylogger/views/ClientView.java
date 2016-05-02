@@ -59,9 +59,8 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 	JDatePickerImpl datePicker;
 	ClientMenuBar menubar;
 	JComboBox<String> list_logList;
-	
-	ArrayList<String> logListNames = new ArrayList<String>();
 
+	ArrayList<String> logListNames = new ArrayList<String>();
 
 	public ClientView() {
 		InitFrame();
@@ -130,7 +129,7 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 
 		// menu
 		menubar = new ClientMenuBar(this);
-		
+
 		// North panel
 		JPanel northPanel = new JPanel();
 		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
@@ -152,10 +151,10 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 
 		// Fucntions panel
 		JPanel networkFuncPanel = new JPanel();
-		
+
 		// function panel for log view
 		JPanel logViewFuncPanel = new JPanel();
-		
+
 		// label choose date
 		JLabel lb_chooseDate = new JLabel("Choose date");
 		networkFuncPanel.add(lb_chooseDate);
@@ -182,26 +181,25 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		networkFuncPanel.add(btn_fetchAllLog);
 		btn_fetchAllLog.addActionListener(this);
 
-
 		// label choose log to show
 		JLabel lb_chooseLog = new JLabel("Choose log");
 		logViewFuncPanel.add(lb_chooseLog);
-		
+
 		// log list
 		list_logList = new JComboBox<String>();
 		list_logList.setPreferredSize(new Dimension(200, 25));
 		list_logList.addActionListener(this);
-		
+
 		// button save log
 		JButton btn_saveLog = new JButton("Save log");
 		btn_saveLog.setName(BTN_SAVE_LOG);
 		btn_saveLog.addActionListener(this);
-		
+
 		// button save all logs
 		JButton btn_saveAllLogs = new JButton("Save all logs");
 		btn_saveAllLogs.setName(BTN_SAVE_ALL_LOGS);
 		btn_saveAllLogs.addActionListener(this);
-		
+
 		logViewFuncPanel.add(list_logList);
 		logViewFuncPanel.add(Box.createRigidArea(new Dimension(30, 0)));
 		logViewFuncPanel.add(btn_saveLog);
@@ -217,8 +215,8 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		ta_logView.setEditable(false);
 		ta_logView.setMargin(new Insets(4, 4, 4, 4));
 		JScrollPane scrollPane = new JScrollPane(ta_logView);
-		//TODO add status bar
-		
+		// TODO add status bar
+
 		setJMenuBar(menubar);
 		// adding panels to main container
 		getContentPane().add(northPanel, "North");
@@ -250,8 +248,7 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 					controller.saveAllLogs();
 					break;
 				}
-			} 
-			else if (event.getSource().getClass().equals(Class.forName("javax.swing.JComboBox"))) {
+			} else if (event.getSource().getClass().equals(Class.forName("javax.swing.JComboBox"))) {
 				// combobox clicked
 				JComboBox<String> cb = (JComboBox<String>) event.getSource();
 				int index;
@@ -268,18 +265,20 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 	public void showErrorMessage(String caption, String msg) {
 		JOptionPane.showMessageDialog(null, msg, caption, JOptionPane.ERROR_MESSAGE);
 	}
-	
+
 	public void showInfoMessage(String caption, String msg) {
 		JOptionPane.showMessageDialog(null, msg, caption, JOptionPane.INFORMATION_MESSAGE);
 	}
-	
+
 	public void setLogList(ArrayList<String> logList) {
 		this.logListNames = logList;
 		list_logList.removeAllItems();
-		for (String logName : logListNames){
-			list_logList.addItem(logName);
+		if (logList.size() > 0) {
+			for (String logName : logListNames) {
+				list_logList.addItem(logName);
+			}
+			list_logList.setSelectedIndex(0);
 		}
-		list_logList.setSelectedIndex(0);
 	}
 
 	public int getLogListSelectedIndex() {
@@ -288,9 +287,9 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 
 	public void scrollLogViewToTop() {
 		ta_logView.setCaretPosition(0);
-		
+
 	}
-	
+
 	public void onMenuItemClick(String itemName) {
 		switch (itemName) {
 		case ClientMenuBar.MI_SAVE_LOG:
@@ -302,13 +301,24 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		case ClientMenuBar.MI_LOAD_ALL_LOGS:
 			controller.loadAllSavedLogs();
 			break;
-		case ClientMenuBar.MI_STOP_LOGGER:
-			controller.stopLoggerRemote();
+		case ClientMenuBar.MI_TOGGLE_LOGGER:
+			controller.toggleLoggerRemote();
 			break;
 		case ClientMenuBar.MI_DELETE_ALL_HOST_LOGS:
 			controller.deleteAllHostLogs();
 			break;
+		case ClientMenuBar.MI_EXIT:
+			Runtime.getRuntime().exit(0);
+			break;
 		}
+	}
+
+	public void updateMenuItemWhenLoggerStop() {
+		menubar.updateMenuItemWhenLoggerStop();
+	}
+
+	public void updateMenuItemWhenLoggerStart() {
+		menubar.updateMenuItemWhenLoggerStart();
 	}
 
 }

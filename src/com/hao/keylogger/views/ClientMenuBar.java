@@ -10,12 +10,13 @@ import javax.swing.JMenuItem;
 
 public class ClientMenuBar extends JMenuBar implements ActionListener {
 	public static final String MI_DELETE_ALL_HOST_LOGS = "mi_deleteAllHostLogs";
-	public static final String MI_STOP_LOGGER = "mi_stopLogger";
+	public static final String MI_TOGGLE_LOGGER = "mi_stopLogger";
 	public static final String MI_EXIT = "mi_exit";
 	public static final String MI_LOAD_ALL_LOGS = "mi_loadAllLogs";
 	public static final String MI_SAVE_ALL_LOGS = "mi_saveAllLogs";
 	public static final String MI_SAVE_LOG = "mi_saveLog";
 	ClientView parent;
+	JMenuItem mi_stopLogger;
 	public ClientMenuBar(ClientView parent) {
 		this.parent = parent;
 		initFrame();
@@ -49,8 +50,8 @@ public class ClientMenuBar extends JMenuBar implements ActionListener {
 
 		JMenu menu_Remote = new JMenu("Remote");
 		
-		JMenuItem mi_stopLogger = new JMenuItem("Stop key logger");
-		mi_stopLogger.setName(MI_STOP_LOGGER);
+		mi_stopLogger = new JMenuItem("Stop key logger");
+		mi_stopLogger.setName(MI_TOGGLE_LOGGER);
 		mi_stopLogger.addActionListener(this);
 		
 		JMenuItem mi_deleteAllHostLogs = new JMenuItem("Delete all host logs");
@@ -68,6 +69,14 @@ public class ClientMenuBar extends JMenuBar implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		JMenuItem item = (JMenuItem) e.getSource();
 		parent.onMenuItemClick(item.getName());
+	}
+	
+	public void updateMenuItemWhenLoggerStop() {
+		mi_stopLogger.setText("Start logger");
+	}
+	
+	public void updateMenuItemWhenLoggerStart() {
+		mi_stopLogger.setText("Stop logger");
 	}
 
 }

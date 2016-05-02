@@ -31,6 +31,8 @@ public class FileManager {
 		while ((readChar = reader.read(buf)) != -1) {
 			stb.append(buf, 0, readChar);
 		}
+		reader.close();
+		fIn.close();
 		return stb.toString();
 	}
 

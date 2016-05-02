@@ -104,15 +104,17 @@ public class UDPClientHelper {
 
 		String msg = Resources.FETCH_LOG_REQUEST + "?" + dateStr;
 
+		sendMessageAndStartListener(msg);
+	}
+
+	private void sendMessageAndStartListener(String msg) {
 		DatagramPacket outPacket = new DatagramPacket(msg.getBytes(), msg.length(), hostAddress, hostPort);
 		try {
 			socket.send(outPacket);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		// waiting for the server message, pass the log to controller when it is
-		// fetched
+		
 		receiverThread.start();
 	}
 
@@ -124,16 +126,7 @@ public class UDPClientHelper {
 	public void fetchAllLogs() {
 		receiveMode = ReceiveMode.GET_LOG;
 		String msg = Resources.FETCH_ALL_LOG_REQUEST + "?";
-		DatagramPacket outPacket = new DatagramPacket(msg.getBytes(), msg.length(), hostAddress, hostPort);
-		try {
-			socket.send(outPacket);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		// waiting for the server message, pass the log to controller when it is
-		// fetched
-		receiverThread.start();
+		sendMessageAndStartListener(msg);
 	}
 
 	/**
@@ -206,25 +199,18 @@ public class UDPClientHelper {
 	public void deleteAllHostLogs() {
 		receiveMode = ReceiveMode.GET_MSG;
 		String msg = Resources.DELETE_ALL_HOST_LOGS + "?";
-		DatagramPacket outPacket = new DatagramPacket(msg.getBytes(), msg.length(), hostAddress, hostPort);
-		try {
-			socket.send(outPacket);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		//start listening
-		receiverThread.start();
+		sendMessageAndStartListener(msg);
 	}
 
 	public void stopLogger() {
 		receiveMode = ReceiveMode.GET_MSG;		
 		String msg = Resources.STOP_LOGGER + "?";		
-		DatagramPacket outPacket = new DatagramPacket(msg.getBytes(), msg.length(), hostAddress, hostPort);
-		try {
-			socket.send(outPacket);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		receiverThread.start();
+		sendMessageAndStartListener(msg);
+	}
+
+	public void startLogger() {
+		receiveMode = ReceiveMode.GET_MSG;
+		String msg = Resources.START_LOGGER + "?";
+		sendMessageAndStartListener(msg);
 	}
 }

