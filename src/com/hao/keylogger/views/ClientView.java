@@ -36,6 +36,8 @@ import net.sourceforge.jdatepicker.impl.UtilDateModel;
  *
  */
 public class ClientView extends JFrame implements ActionListener, IClientView {
+	private static final String BTN_SAVE_LOG = "btn_saveLog";
+
 	private static final long serialVersionUID = 1L;
 
 	private static final String BTN_FETCH_LOG_NAME = "btn_fetchLog";
@@ -176,9 +178,13 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		logViewFuncPanel.add(lb_chooseLog);
 		
 		// log list
-		list_logList = new JComboBox();
+		list_logList = new JComboBox<String>();
 		list_logList.setPreferredSize(new Dimension(200, 25));
 		list_logList.addActionListener(this);
+		
+		// button save log
+		JButton btn_saveLog = new JButton("Save log");
+		btn_saveLog.setName(BTN_SAVE_LOG);
 		
 		logViewFuncPanel.add(list_logList);
 		
@@ -191,6 +197,9 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		ta_logView = new JTextArea(5, 10);
 		ta_logView.setLineWrap(true);
 		JScrollPane scrollPane = new JScrollPane(ta_logView);
+		
+		//TODO add status bar
+		
 		// adding panels to main container
 		getContentPane().add(northPanel, "North");
 		getContentPane().add(scrollPane);
@@ -199,6 +208,7 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		setVisible(true);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		try {
@@ -219,16 +229,14 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 				// combobox clicked
 				JComboBox<String> cb = (JComboBox<String>) event.getSource();
 				int index;
-				if ((index = cb.getSelectedIndex()) > 0) {
+				if ((index = cb.getSelectedIndex()) >= 0) {
 					controller.displayLog(index);
 				}
-				
 			}
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 
 	public void showErrorMessage(String caption, String msg) {
