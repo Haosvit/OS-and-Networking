@@ -305,7 +305,11 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 			controller.toggleLoggerRemote();
 			break;
 		case ClientMenuBar.MI_DELETE_ALL_HOST_LOGS:
-			controller.deleteAllHostLogs();
+			int choosen = JOptionPane.showConfirmDialog(null, "Do you really want to delete all host logs",
+					"Key logger - Delete all host logs", JOptionPane.YES_NO_OPTION);
+			if (choosen == JOptionPane.YES_OPTION) {
+				controller.deleteAllHostLogs();
+			}
 			break;
 		case ClientMenuBar.MI_EXIT:
 			Runtime.getRuntime().exit(0);
