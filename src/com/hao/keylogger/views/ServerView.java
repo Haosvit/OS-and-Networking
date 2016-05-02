@@ -24,15 +24,16 @@ public class ServerView extends JFrame implements ActionListener, IServerView {
 	private static final String WINDOW_TITLE = "Keylogger Server";
 
 	private final String BTN_START_SERVER_NAME = "btn_startServer";
-	
+
 	ServerLogController controller;
-	
+
 	JTextField tf_host;
 	JTextField tf_port;
 	JTextArea ta_monitor;
+	JButton btn_startServer;
 
 	boolean isServerStarted = false;
-	
+
 	public ServerView() {
 		initFrame();
 	}
@@ -61,7 +62,7 @@ public class ServerView extends JFrame implements ActionListener, IServerView {
 		tf_port = new JTextField();
 		tf_port.setColumns(4);
 
-		JButton btn_startServer = new JButton("Start server");
+		btn_startServer = new JButton("Start server");
 		btn_startServer.setName(BTN_START_SERVER_NAME);
 		btn_startServer.setPreferredSize(new Dimension(150, 25));
 		btn_startServer.addActionListener(this);
@@ -71,13 +72,13 @@ public class ServerView extends JFrame implements ActionListener, IServerView {
 		conPanel.add(lb_port);
 		conPanel.add(tf_port);
 		conPanel.add(btn_startServer);
-		
+
 		northPanel.add(conPanel);
-		
+
 		// center
 		ta_monitor = new JTextArea(5, 10);
 		JScrollPane scrollPane = new JScrollPane(ta_monitor);
-		
+
 		// adding panels to main container
 		getContentPane().add(northPanel, "North");
 		getContentPane().add(scrollPane);
@@ -91,22 +92,25 @@ public class ServerView extends JFrame implements ActionListener, IServerView {
 		JButton source = (JButton) e.getSource();
 		switch (source.getName()) {
 		case BTN_START_SERVER_NAME:
-			if (!isServerStarted) {
-				if (controller.startServer()) {
-					isServerStarted = true;
-					source.setText("Stop server");
-				}
-				else {
-					JOptionPane.showMessageDialog(null, "Server is already running!", "Start server error", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-			else {
-				if (controller.stopServer()) {
-					isServerStarted = false;
-					source.setText("Start server");
-				}
-			}
-			break;
+			// if (!isServerStarted) {
+			// if (
+			controller.toggleServerOnOrOff();
+			// ) {
+			// isServerStarted = true;
+			// source.setText("Stop server");
+			// }
+			// else {
+			// JOptionPane.showMessageDialog(null, "Server is already running!",
+			// "Start server error", JOptionPane.ERROR_MESSAGE);
+			// }
+			// }
+			// else {
+			// if (controller.stopServer()) {
+			// isServerStarted = false;
+			// source.setText("Start server");
+			// }
+			// }
+			// break;
 		}
 	}
 
@@ -119,8 +123,7 @@ public class ServerView extends JFrame implements ActionListener, IServerView {
 	public int getPort() {
 		try {
 			return Integer.parseInt(tf_port.getText());
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			return 0;
 		}
 	}
@@ -150,4 +153,11 @@ public class ServerView extends JFrame implements ActionListener, IServerView {
 		this.controller = controller;
 	}
 
+	public void updateViewWhenServerIsStarted() {
+		btn_startServer.setText("Stop server");
+	}
+
+	public void updateViewWhenServerIsStopped() {
+		btn_startServer.setText("Start server");
+	}
 }

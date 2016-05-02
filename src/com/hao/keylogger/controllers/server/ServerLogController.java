@@ -12,7 +12,9 @@ public class ServerLogController {
 	Log log;
 	UDPServerHelper udpServerHelper;
 	private final int DEFAULT_PORT = 17;
-	
+
+	private boolean isStarted = false;
+
 	public ServerLogController(ServerView view, Log log) {
 		this.view = view;
 		this.log = log;
@@ -21,21 +23,30 @@ public class ServerLogController {
 		view.setPort(Resource.DEFAULT_PORT);
 	}
 
-	public boolean startServer() {
-		String hostName = view.getHost();
-		int port = view.getPort();
-		// init
-		udpServerHelper = UDPServerHelper.getInstance(hostName, port);
-		udpServerHelper.setController(this);
-		
-		// start server and serve clients
-		if (udpServerHelper.startServer()) {
-			appendToMonitory("Server started at " + hostName + ":" + port);
-			return true;
+	public void toggleServerOnOrOff() {
+		if (!isStarted) {
+			String hostName = view.getHost();
+			int port = view.getPort();
+
+			// init
+			udpServerHelper = UDPServerHelper.getInstance(hostName, port);
+			udpServerHelper.setController(this);
+
+			// start server and serve clients
+			if (udpServerHelper.startServer()) {
+				appendToMonitory("Server started at " + hostName + ":" + port);
+				isStarted = true;
+				view.updateViewWhenServerIsStarted();
+			}
 		}
-		return false;
+		else {
+			if (stopServer()) {
+				isStarted = false;
+				view.updateViewWhenServerIsStopped();
+			}
+		}
 	}
-	
+
 	public boolean stopServer() {
 		if (udpServerHelper.stopServer()) {
 			appendToMonitory("Server stopped.");
@@ -49,8 +60,7 @@ public class ServerLogController {
 		view.appendToMonitor(": ");
 		view.appendToMonitor(msg);
 		view.appendToMonitor("\n");
-		
-	}
 
+	}
 
 }
