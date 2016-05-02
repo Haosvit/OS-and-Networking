@@ -5,9 +5,9 @@ public interface Resource {
 	
 	//buffers
 	/**
-	 * client buffer size: 32KB
+	 * client buffer size: 1 Gb
 	 */
-	final int CLIENT_BUFFER_SIZE = 32*1024; 
+	final int CLIENT_BUFFER_SIZE = Integer.MAX_VALUE / 2; 
 	/**
 	 * server buffer size: 256 bytes
 	 */

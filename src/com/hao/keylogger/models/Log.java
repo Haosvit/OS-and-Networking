@@ -2,11 +2,13 @@ package com.hao.keylogger.models;
 
 import java.io.Serializable;
 import java.net.InetAddress;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Log implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
+	private String name;
 	private InetAddress host;
 	private int port;
 	private Date dateOfLog;
@@ -44,6 +46,7 @@ public class Log implements Serializable {
 
 	public void setDateOfLog(Date dateOfLog) {
 		this.dateOfLog = dateOfLog;
+		this.name = new SimpleDateFormat("d-MM-yyyy").format(dateOfLog);
 	}
 
 	public String getContent() {
@@ -54,5 +57,11 @@ public class Log implements Serializable {
 		this.content = content;
 	}
 
+	public String getName() {		
+		return name;
+	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
 }

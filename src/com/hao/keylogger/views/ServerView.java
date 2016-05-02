@@ -11,6 +11,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -20,6 +21,8 @@ import com.hao.keylogger.controllers.server.IServerView;
 import com.hao.keylogger.controllers.server.ServerLogController;
 
 public class ServerView extends JFrame implements ActionListener, IServerView {
+	private static final String WINDOW_TITLE = "Keylogger Server";
+
 	private final String BTN_START_SERVER_NAME = "btn_startServer";
 	
 	ServerLogController controller;
@@ -36,6 +39,7 @@ public class ServerView extends JFrame implements ActionListener, IServerView {
 
 	private void initFrame() {
 		setSize(700, 400);
+		setTitle(WINDOW_TITLE);
 
 		// get screen size
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -91,6 +95,9 @@ public class ServerView extends JFrame implements ActionListener, IServerView {
 				if (controller.startServer()) {
 					isServerStarted = true;
 					source.setText("Stop server");
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "Server is already running!", "Start server error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 			else {

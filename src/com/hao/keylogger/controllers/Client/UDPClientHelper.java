@@ -91,7 +91,7 @@ public class UDPClientHelper {
 	 */
 	public void fetchLog(Date date) {
 		// TODO get from server, convert to Log object, pass to controller
-		String dateStr = new SimpleDateFormat("dd-MM-yyyy").format(date);
+		String dateStr = new SimpleDateFormat("d-M-yyyy").format(date);
 		
 		String msg = Resource.FETCH_LOG_REQUEST + "?" + dateStr;
 		
@@ -106,20 +106,23 @@ public class UDPClientHelper {
 		Thread receiverThread = new Thread(new PacketReceiver(date));
 		receiverThread.start();
 	}
-	
-	/**
-	 * Receive message from server
-	 * @return String
-	 */
 
 	/**
 	 * get all logs stored on host
 	 * @return
 	 */
-	public ArrayList<Log> fetchAllLogs() {
-		ArrayList<Log> logs = new ArrayList<Log>();
-		//logs.add(fetchLog(new Date()));
-		return logs;
+	public void fetchAllLogs() {
+		String msg = Resource.FETCH_ALL_LOG_REQUEST + "?";
+		DatagramPacket outPacket = new DatagramPacket(msg.getBytes(), msg.length(), address, port);
+		try {
+			socket.send(outPacket);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		// waiting for the server message, pass the log to controller when it is fetched
+//		Thread receiverThread = new Thread(new PacketReceiver());
+//		receiverThread.start();
 	}
 	
 	/**
@@ -135,7 +138,6 @@ public class UDPClientHelper {
 		
 		@Override
 		public void run() {
-		
 			try {
 				String receiveMsg = receivePacket();
 				
@@ -147,9 +149,10 @@ public class UDPClientHelper {
 				
 				// pass the log back to controller
 				controller.receiveLogFromServer(log);
+				
 			}
 			catch (Exception ex) {
-				
+				ex.printStackTrace();
 			}
 			
 		}
@@ -158,8 +161,8 @@ public class UDPClientHelper {
 			DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
 			String receiveMsg = "";
 			try {
-				socket.receive(inPacket);
-				receiveMsg = new String(inPacket.getData(), 0, inPacket.getLength());
+				socket.receive(inPacket);				
+				receiveMsg = new String(inPacket.getData(), 0, inPacket.getLength());				
 			}
 			catch (IOException ex) {
 				ex.printStackTrace();
