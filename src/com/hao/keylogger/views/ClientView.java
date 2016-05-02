@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.sql.Savepoint;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -37,6 +38,8 @@ import net.sourceforge.jdatepicker.impl.UtilDateModel;
  *
  */
 public class ClientView extends JFrame implements ActionListener, IClientView {
+	private static final String BTN_SAVE_ALL_LOGS = "btn_saveAllLogs";
+
 	private static final String BTN_SAVE_LOG = "btn_saveLog";
 
 	private static final long serialVersionUID = 1L;
@@ -186,9 +189,17 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		// button save log
 		JButton btn_saveLog = new JButton("Save log");
 		btn_saveLog.setName(BTN_SAVE_LOG);
+		btn_saveLog.addActionListener(this);
+		
+		// button save all logs
+		JButton btn_saveAllLogs = new JButton("Save all logs");
+		btn_saveAllLogs.setName(BTN_SAVE_ALL_LOGS);
+		btn_saveAllLogs.addActionListener(this);
 		
 		logViewFuncPanel.add(list_logList);
-		
+		logViewFuncPanel.add(Box.createRigidArea(new Dimension(30, 0)));
+		logViewFuncPanel.add(btn_saveLog);
+		logViewFuncPanel.add(btn_saveAllLogs);
 
 		// adding 2 panels to north panel
 		northPanel.add(conPanel);
@@ -226,6 +237,12 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 				case BTN_FETCH_ALL_LOG_NAME:
 					controller.fetchAllLogs();
 					break;
+				case BTN_SAVE_LOG:
+					controller.saveLog(getLogListSelectedIndex());
+					break;
+				case BTN_SAVE_ALL_LOGS:
+					controller.saveAllLogs();
+					break;
 				}
 			} 
 			else if (event.getSource().getClass().equals(Class.forName("javax.swing.JComboBox"))) {
@@ -244,6 +261,10 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 
 	public void showErrorMessage(String caption, String msg) {
 		JOptionPane.showMessageDialog(null, msg, caption, JOptionPane.ERROR_MESSAGE);
+	}
+	
+	public void showInfoMessage(String caption, String msg) {
+		JOptionPane.showMessageDialog(null, msg, caption, JOptionPane.INFORMATION_MESSAGE);
 	}
 	
 	public void setLogList(ArrayList<String> logList) {

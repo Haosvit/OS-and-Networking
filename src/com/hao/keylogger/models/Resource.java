@@ -20,5 +20,7 @@ public interface Resource {
 	// request params
 	final String FETCH_LOG_REQUEST = "fetch log by date";
 	final String FETCH_ALL_LOG_REQUEST = "fetch all logs";
+
+	final String LOGS_CLIENT_DIRECTORY = "/Logs";
 	
 }
