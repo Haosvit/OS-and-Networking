@@ -1,12 +1,13 @@
 package com.hao.keylogger.models;
 
 import java.io.Serializable;
+import java.net.InetAddress;
 import java.util.Date;
 
 public class Log implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private String host;
+	private InetAddress host;
 	private int port;
 	private Date dateOfLog;
 	private String content;
@@ -14,18 +15,18 @@ public class Log implements Serializable {
 	public Log() {
 	}
 
-	public Log(String host, int port, Date dateOfLog, String content) {
+	public Log(InetAddress host, int port, Date dateOfLog, String content) {
 		super();
 		this.host = host;
 		this.port = port;
 		this.dateOfLog = dateOfLog;
 		this.content = content;
 	}
-	public String getHost() {
+	public InetAddress getHost() {
 		return host;
 	}
 
-	public void setHost(String serverAddress) {
+	public void setHost(InetAddress serverAddress) {
 		this.host = serverAddress;
 	}
 	

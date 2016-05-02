@@ -1,4 +1,4 @@
-package com.hao.keylogger.controllers;
+package com.hao.keylogger.controllers.server;
 
 public interface IServerView {
 	String getHost();

@@ -1,9 +1,11 @@
-package com.hao.keylogger.controllers;
+package com.hao.keylogger.controllers.Client;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Date;
 
 public interface IClientView {
-	String getHost();
+	InetAddress getHostAddress() throws UnknownHostException;
 	int getPort();
 	String getLog();
 	Date getDatePicked();

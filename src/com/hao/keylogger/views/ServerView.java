@@ -16,8 +16,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import com.hao.keylogger.controllers.IServerView;
-import com.hao.keylogger.controllers.ServerLogController;
+import com.hao.keylogger.controllers.server.IServerView;
+import com.hao.keylogger.controllers.server.ServerLogController;
 
 public class ServerView extends JFrame implements ActionListener, IServerView {
 	private final String BTN_START_SERVER_NAME = "btn_startServer";

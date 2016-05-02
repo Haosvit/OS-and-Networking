@@ -1,4 +1,4 @@
-package com.hao.keylogger.controllers;
+package com.hao.keylogger.controllers.server;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,6 +25,7 @@ public class ServerLogController {
 		int port = view.getPort();
 		// init
 		udpServerHelper = UDPServerHelper.getInstance(hostName, port);
+		udpServerHelper.setController(this);
 		
 		if (udpServerHelper.startServer()) {
 			appendToMonitory("Server started at " + hostName + ":" + port);
@@ -42,7 +43,7 @@ public class ServerLogController {
 		return false;
 	}
 
-	private void appendToMonitory(String msg) {
+	public void appendToMonitory(String msg) {
 		view.appendToMonitor(new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(new Date()));
 		view.appendToMonitor(": ");
 		view.appendToMonitor(msg);
