@@ -16,6 +16,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -179,12 +180,14 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		switch (btn.getName()) {
 		case BTN_FETCH_LOG_NAME:
 				controller.fetchLog(getDatePicked());
-//				JOptionPane.showMessageDialog(null, testMsg, "TestConection", JOptionPane.INFORMATION_MESSAGE);
 			break;
 		case BTN_FETCH_ALL_LOG_NAME:
 				controller.fetchAllLogs();
 			break;
 		}
+	}
+	public void showErrorMessage(String caption, String msg) {
+		JOptionPane.showMessageDialog(null, msg, caption, JOptionPane.ERROR_MESSAGE);
 	}
 
 	

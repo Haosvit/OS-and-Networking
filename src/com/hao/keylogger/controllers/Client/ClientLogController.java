@@ -45,13 +45,17 @@ public class ClientLogController {
 		view.setLogContent(log.getContent());
 	}
 
-	public void fetchLog(Date date) throws NullPointerException {
+	public void fetchLog(Date date){
 		try {
-			new UDPClientHelper(this, view.getHostAddress(), view.getPort()).fetchLog(date);
+			new UDPClientHelper(this, view.getHostAddress(), view.getPort())
+			.fetchLog(date);
 			displayLog();
 		} catch (SocketException | UnknownHostException e) {
-			// TODO xử lý fetch không được log
+			view.showErrorMessage("Fetch log error", "Invalid host address or port!");
 			e.printStackTrace();
+		}
+		catch (NullPointerException ex) {
+			view.showErrorMessage("Fetch log error", "Can not fetch log! Server is not running!");
 		}
 		
 	}

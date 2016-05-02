@@ -28,6 +28,7 @@ public class ServerLogController {
 		udpServerHelper = UDPServerHelper.getInstance(hostName, port);
 		udpServerHelper.setController(this);
 		
+		// start server and serve clients
 		if (udpServerHelper.startServer()) {
 			appendToMonitory("Server started at " + hostName + ":" + port);
 			return true;
