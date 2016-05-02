@@ -13,8 +13,7 @@ import com.hao.keylogger.views.ClientView;
 
 public class ClientLogController {
 	private ClientView view;
-	private Log log;
-	ArrayList<Log> logs;
+	ArrayList<Log> logs = new ArrayList<Log>();
 
 	public ClientLogController(ClientView view) {
 		super();
@@ -32,15 +31,8 @@ public class ClientLogController {
 		this.view = logView;
 	}
 
-	public Log getLog() {
-		return log;
-	}
-
-	public void setLog(Log log) {
-		this.log = log;
-	}
-
-	public void displayLog() {
+	public void displayLog(int index) {
+		Log log = logs.get(index);
 		view.setLogContent(log.getContent());
 	}
 
@@ -60,31 +52,31 @@ public class ClientLogController {
 	}
 	
 	public void fetchAllLogs(){
+		// the log will be displayed when it is fetched
 		try {
 			new UDPClientHelper(this, view.getHostAddress(), view.getPort()).fetchAllLogs();
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// load to view
 	}
 	
 	/**
 	 * Display the fetched log to view
 	 * @param log
 	 */
-	public void receiveLogFromServer(Log log) {
-		this.log = log;
+	public void receiveLogFromServer(ArrayList<Log> logs) {
+		this.logs = logs;
 		ArrayList<String> logListNames = new ArrayList<String>();
-		logListNames.add(log.getName());
-		setLogList(logListNames);
-		displayLog();
+		for (Log log : logs) {
+			logListNames.add(log.getName());
+		}
+		setViewLogList(logListNames);
+		displayLog(0);
 	}
 
-	private void setLogList(ArrayList<String> logListNames) {
+	private void setViewLogList(ArrayList<String> logListNames) {
 		view.setLogList(logListNames);
 	}
 

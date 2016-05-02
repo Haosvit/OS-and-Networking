@@ -46,7 +46,7 @@ public class Log implements Serializable {
 
 	public void setDateOfLog(Date dateOfLog) {
 		this.dateOfLog = dateOfLog;
-		this.name = new SimpleDateFormat("d-MM-yyyy").format(dateOfLog);
+		this.name = new SimpleDateFormat("d-M-yyyy").format(dateOfLog);
 	}
 
 	public String getContent() {

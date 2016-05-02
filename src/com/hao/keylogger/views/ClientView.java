@@ -53,6 +53,7 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 	
 	ArrayList<String> logListNames = new ArrayList<String>();
 
+
 	public ClientView() {
 		InitFrame();
 		// TODO set look and feel
@@ -217,7 +218,10 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 			else if (event.getSource().getClass().equals(Class.forName("javax.swing.JComboBox"))) {
 				// combobox clicked
 				JComboBox<String> cb = (JComboBox<String>) event.getSource();
-				String selectedLogFileName = cb.getSelectedItem().toString();
+				int index;
+				if ((index = cb.getSelectedIndex()) > 0) {
+					controller.displayLog(index);
+				}
 				
 			}
 		} catch (ClassNotFoundException e) {
@@ -237,6 +241,11 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		for (String logName : logListNames){
 			list_logList.addItem(logName);
 		}
+		list_logList.setSelectedIndex(0);
+	}
+
+	public int getLogListSelectedIndex() {
+		return list_logList.getSelectedIndex();
 	}
 
 }

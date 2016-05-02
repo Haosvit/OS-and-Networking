@@ -1,6 +1,7 @@
 package com.hao.keylogger.controllers.server;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -24,5 +25,10 @@ public class FileManager {
 				stb.append(buf,0, readChar);
 			}
 		return stb.toString();
+	}
+	
+	public String getFileName() {
+		File file = new File(filePath);
+		return file.getName();
 	}
 }

@@ -9,6 +9,7 @@ import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.StringTokenizer;
 
 import javax.swing.text.SimpleAttributeSet;
 
@@ -103,7 +104,7 @@ public class UDPClientHelper {
 		}
 		
 		// waiting for the server message, pass the log to controller when it is fetched
-		Thread receiverThread = new Thread(new PacketReceiver(date));
+		Thread receiverThread = new Thread(new PacketReceiver());
 		receiverThread.start();
 	}
 
@@ -121,8 +122,8 @@ public class UDPClientHelper {
 		}
 		
 		// waiting for the server message, pass the log to controller when it is fetched
-//		Thread receiverThread = new Thread(new PacketReceiver());
-//		receiverThread.start();
+		Thread receiverThread = new Thread(new PacketReceiver());
+		receiverThread.start();
 	}
 	
 	/**
@@ -131,25 +132,28 @@ public class UDPClientHelper {
 	 *
 	 */
 	private class PacketReceiver implements Runnable {
-		Date dateOfLog;
-		public PacketReceiver(Date date) {
-			this.dateOfLog = date;
-		}
-		
 		@Override
 		public void run() {
 			try {
-				String receiveMsg = receivePacket();
+				// get number of logs
+				int numOfLogs = Integer.parseInt(receivePacket());
 				
-				Log log = new Log();
-				log.setDateOfLog(dateOfLog);
-				log.setHost(address);
-				log.setPort(port);
-				log.setContent(receiveMsg);
-				
+				ArrayList<Log> logs = new ArrayList<Log>();
+				for (int i = 0; i < numOfLogs; i++) {
+					String dateOfLogStr = receivePacket();
+					Date dateOfLog = new SimpleDateFormat("d-M-yyyy").parse(dateOfLogStr);
+					
+					String logContent = receivePacket();
+					
+					Log log = new Log();
+					log.setDateOfLog(dateOfLog);
+					log.setHost(address);
+					log.setPort(port);
+					log.setContent(logContent);
+					logs.add(log);
+				}
 				// pass the log back to controller
-				controller.receiveLogFromServer(log);
-				
+				controller.receiveLogFromServer(logs);
 			}
 			catch (Exception ex) {
 				ex.printStackTrace();
