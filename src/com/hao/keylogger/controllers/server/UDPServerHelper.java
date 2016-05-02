@@ -22,7 +22,7 @@ public class UDPServerHelper {
 	private ServerLogController controller;
 
 	private DatagramSocket socket;
-	private InetAddress address;
+	private InetAddress hostAddress;
 	private String hostName;
 	private int port;
 
@@ -56,8 +56,8 @@ public class UDPServerHelper {
 
 	public boolean startServer() {
 		try {
-			address = InetAddress.getByName(hostName);
-			socket = new DatagramSocket(port, address);
+			hostAddress = InetAddress.getByName(hostName);
+			socket = new DatagramSocket(port, hostAddress);
 			listenThread = new Thread(new RequestReceiver());
 			listenThread.start();
 			return true;
@@ -110,12 +110,23 @@ public class UDPServerHelper {
 					case Resource.FETCH_ALL_LOG_REQUEST:
 						getAllLogsAndSend(inPacket.getAddress(), inPacket.getPort());
 						break;
+					case Resource.DELETE_ALL_HOST_LOGS:
+						deleteAllHostLogs(inPacket.getAddress(), inPacket.getPort());
+						break;
 					}
 
 				} catch (Exception e) {
 
 				}
 			}
+		}
+
+		private void deleteAllHostLogs(InetAddress address, int port) {
+			File logFolder = new File(Resource.LOGS_DIRECTORY);
+			for (File f : logFolder.listFiles()) {
+				f.delete();
+			}
+			sendMessage(address, port, "All logs are deleted!");
 		}
 
 		private void getAllLogsAndSend(InetAddress address, int port) {

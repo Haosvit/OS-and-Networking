@@ -38,6 +38,8 @@ import net.sourceforge.jdatepicker.impl.UtilDateModel;
  *
  */
 public class ClientView extends JFrame implements ActionListener, IClientView {
+	private static final String BTN_REMOTE_CONTROL = "btn_remoteControl";
+
 	private static final String BTN_SAVE_ALL_LOGS = "btn_saveAllLogs";
 
 	private static final String BTN_SAVE_LOG = "btn_saveLog";
@@ -55,6 +57,7 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 	JTextField tf_port;
 	JTextArea ta_logView;
 	JDatePickerImpl datePicker;
+	ClientMenuBar menubar;
 	JComboBox<String> list_logList;
 	
 	ArrayList<String> logListNames = new ArrayList<String>();
@@ -125,6 +128,9 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setLocation(screenSize.width / 2 - this.getWidth() / 2, screenSize.height / 2 - this.getHeight() / 2);
 
+		// menu
+		menubar = new ClientMenuBar(this);
+		
 		// North panel
 		JPanel northPanel = new JPanel();
 		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
@@ -201,7 +207,6 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		logViewFuncPanel.add(btn_saveLog);
 		logViewFuncPanel.add(btn_saveAllLogs);
 
-		// adding 2 panels to north panel
 		northPanel.add(conPanel);
 		northPanel.add(networkFuncPanel);
 		northPanel.add(logViewFuncPanel);
@@ -214,6 +219,7 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		JScrollPane scrollPane = new JScrollPane(ta_logView);
 		//TODO add status bar
 		
+		setJMenuBar(menubar);
 		// adding panels to main container
 		getContentPane().add(northPanel, "North");
 		getContentPane().add(scrollPane);
@@ -283,6 +289,26 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 	public void scrollLogViewToTop() {
 		ta_logView.setCaretPosition(0);
 		
+	}
+	
+	public void onMenuItemClick(String itemName) {
+		switch (itemName) {
+		case ClientMenuBar.MI_SAVE_LOG:
+			controller.saveLog(getLogListSelectedIndex());
+			break;
+		case ClientMenuBar.MI_SAVE_ALL_LOGS:
+			controller.saveAllLogs();
+			break;
+		case ClientMenuBar.MI_LOAD_ALL_LOGS:
+			controller.loadAllSavedLogs();
+			break;
+		case ClientMenuBar.MI_STOP_LOGGER:
+			controller.stopLoggerRemote();
+			break;
+		case ClientMenuBar.MI_DELETE_ALL_HOST_LOGS:
+			controller.deleteAllHostLogs();
+			break;
+		}
 	}
 
 }

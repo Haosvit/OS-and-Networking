@@ -21,6 +21,7 @@ public class ServerLogController {
 		view.setController(this);
 		view.setHost(UDPServerHelper.getLocalHostIP());
 		view.setPort(Resource.DEFAULT_PORT);
+		toggleServerOnOrOff();
 	}
 
 	public void toggleServerOnOrOff() {

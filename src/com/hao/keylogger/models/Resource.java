@@ -22,5 +22,7 @@ public interface Resource {
 	final String FETCH_ALL_LOG_REQUEST = "fetch all logs";
 
 	final String LOGS_CLIENT_DIRECTORY = "/Logs";
+
+	final String DELETE_ALL_HOST_LOGS = "delete all host logs";
 	
 }
