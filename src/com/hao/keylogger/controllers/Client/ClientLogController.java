@@ -139,8 +139,15 @@ public class ClientLogController {
 	}
 
 	public void stopLoggerRemote() {
-		// TODO Auto-generated method stub
-		
+		try {
+			new UDPClientHelper(this, view.getHostAddress(), view.getPort()).stopLogger();
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void loadAllSavedLogs() {

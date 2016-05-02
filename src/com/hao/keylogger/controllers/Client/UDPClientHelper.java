@@ -23,9 +23,9 @@ public class UDPClientHelper {
 	private static UDPClientHelper instance;
 
 	private DatagramSocket socket;
-	private InetAddress address;
+	private InetAddress hostAddress;
 	private String hostName;
-	private int port;
+	private int hostPort;
 	ClientLogController controller;
 	Thread receiverThread;
 	
@@ -45,8 +45,8 @@ public class UDPClientHelper {
 			throws SocketException, UnknownHostException {
 		socket = new DatagramSocket();
 		socket.setSoTimeout(Resources.TIME_OUT);
-		address = inetAddress;
-		this.port = port;
+		hostAddress = inetAddress;
+		this.hostPort = port;
 		this.controller = controller;
 		receiverThread = new Thread(new PacketReceiver());
 	}
@@ -60,11 +60,11 @@ public class UDPClientHelper {
 	}
 
 	public InetAddress getAddress() {
-		return address;
+		return hostAddress;
 	}
 
 	public void setAddress(InetAddress address) {
-		this.address = address;
+		this.hostAddress = address;
 	}
 
 	public String getHostName() {
@@ -76,11 +76,11 @@ public class UDPClientHelper {
 	}
 
 	public int getPort() {
-		return port;
+		return hostPort;
 	}
 
 	public void setPort(int port) {
-		this.port = port;
+		this.hostPort = port;
 	}
 
 	public static String getLocalHostIP() {
@@ -104,7 +104,7 @@ public class UDPClientHelper {
 
 		String msg = Resources.FETCH_LOG_REQUEST + "?" + dateStr;
 
-		DatagramPacket outPacket = new DatagramPacket(msg.getBytes(), msg.length(), address, port);
+		DatagramPacket outPacket = new DatagramPacket(msg.getBytes(), msg.length(), hostAddress, hostPort);
 		try {
 			socket.send(outPacket);
 		} catch (IOException e) {
@@ -124,7 +124,7 @@ public class UDPClientHelper {
 	public void fetchAllLogs() {
 		receiveMode = ReceiveMode.GET_LOG;
 		String msg = Resources.FETCH_ALL_LOG_REQUEST + "?";
-		DatagramPacket outPacket = new DatagramPacket(msg.getBytes(), msg.length(), address, port);
+		DatagramPacket outPacket = new DatagramPacket(msg.getBytes(), msg.length(), hostAddress, hostPort);
 		try {
 			socket.send(outPacket);
 		} catch (IOException e) {
@@ -179,8 +179,8 @@ public class UDPClientHelper {
 
 				Log log = new Log();
 				log.setDateOfLog(dateOfLog);
-				log.setHost(address);
-				log.setPort(port);
+				log.setHost(hostAddress);
+				log.setPort(hostPort);
 				log.setContent(logContent);
 				logs.add(log);
 			}
@@ -206,13 +206,25 @@ public class UDPClientHelper {
 	public void deleteAllHostLogs() {
 		receiveMode = ReceiveMode.GET_MSG;
 		String msg = Resources.DELETE_ALL_HOST_LOGS + "?";
-		DatagramPacket outPacket = new DatagramPacket(msg.getBytes(), msg.length(), address, port);
+		DatagramPacket outPacket = new DatagramPacket(msg.getBytes(), msg.length(), hostAddress, hostPort);
 		try {
 			socket.send(outPacket);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		//start listening
+		receiverThread.start();
+	}
+
+	public void stopLogger() {
+		receiveMode = ReceiveMode.GET_MSG;		
+		String msg = Resources.STOP_LOGGER + "?";		
+		DatagramPacket outPacket = new DatagramPacket(msg.getBytes(), msg.length(), hostAddress, hostPort);
+		try {
+			socket.send(outPacket);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		receiverThread.start();
 	}
 }

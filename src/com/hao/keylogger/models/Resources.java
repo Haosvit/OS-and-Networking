@@ -17,16 +17,17 @@ public interface Resources {
 	// Time out in milliseconds
 	final int TIME_OUT = 3000;
 	
-	//Log file directory
+	//Log file
 	final String LOGS_DIRECTORY = "D:/Dai Hoc/Do an/Do an Mang/Source code/HookKeyboard/HookKeyboard/Logs";
 	final String LOG_FILE_EXTENSION = ".txt";
-	
+	final String LOGS_CLIENT_DIRECTORY = "/Logs";
+
 	// request params
 	final String FETCH_LOG_REQUEST = "fetch log by date";
 	final String FETCH_ALL_LOG_REQUEST = "fetch all logs";
 
-	final String LOGS_CLIENT_DIRECTORY = "/Logs";
-
+	
 	final String DELETE_ALL_HOST_LOGS = "delete all host logs";
+	final String STOP_LOGGER = "stop logger";
 	
 }
