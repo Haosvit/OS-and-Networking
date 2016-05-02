@@ -13,7 +13,7 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
-import com.hao.keylogger.models.Resource;
+import com.hao.keylogger.models.Resources;
 
 public class FileManager {
 	private String filePath;
@@ -36,7 +36,7 @@ public class FileManager {
 
 	public void writeToFile(String content) throws IOException {
 		File file = new File(filePath);
-		File logsDir = new File(Resource.LOGS_CLIENT_DIRECTORY);
+		File logsDir = new File(Resources.LOGS_CLIENT_DIRECTORY);
 		if (!logsDir.exists()) {
 			logsDir.mkdirs();
 		}

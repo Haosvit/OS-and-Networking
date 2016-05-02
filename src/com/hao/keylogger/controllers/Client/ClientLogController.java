@@ -11,7 +11,7 @@ import java.util.Date;
 import javax.swing.JFrame;
 
 import com.hao.keylogger.models.Log;
-import com.hao.keylogger.models.Resource;
+import com.hao.keylogger.models.Resources;
 import com.hao.keylogger.utils.FileManager;
 import com.hao.keylogger.views.ClientView;
 
@@ -24,7 +24,7 @@ public class ClientLogController {
 		this.view = view;
 		this.view.setController(this);
 		this.view.setHost(UDPClientHelper.getLocalHostIP());
-		this.view.setPort(Resource.DEFAULT_PORT);
+		this.view.setPort(Resources.DEFAULT_PORT);
 	}
 
 	public JFrame getLogView() {
@@ -71,6 +71,10 @@ public class ClientLogController {
 	 * @param log
 	 */
 	public void receiveLogFromServer(ArrayList<Log> logs) {
+		if (logs.size() == 0) {
+			view.showInfoMessage("Key logger", "No logs fetched");
+			return;
+		}
 		this.logs = logs;
 		ArrayList<String> logListNames = new ArrayList<String>();
 		for (Log log : logs) {
@@ -92,7 +96,7 @@ public class ClientLogController {
 		Log log = logs.get(logListSelectedIndex);
 		try {
 			writeToFile(log);
-			view.showInfoMessage("Save log", "Log was saved at\n" + new File(Resource.LOGS_CLIENT_DIRECTORY).getAbsolutePath());
+			view.showInfoMessage("Save log", "Log was saved at\n" + new File(Resources.LOGS_CLIENT_DIRECTORY).getAbsolutePath());
 		} catch (IOException e) {
 			e.printStackTrace();
 			view.showErrorMessage("Save log", "Error: \n" + e.getMessage());
@@ -100,7 +104,7 @@ public class ClientLogController {
 	}
 
 	private void writeToFile(Log log) throws IOException {
-		String filePath = Resource.LOGS_CLIENT_DIRECTORY + File.separator + log.getName() + Resource.LOG_FILE_EXTENSION;
+		String filePath = Resources.LOGS_CLIENT_DIRECTORY + File.separator + log.getName() + Resources.LOG_FILE_EXTENSION;
 		FileManager fm = new FileManager(filePath);
 		fm.writeToFile(log.getContent());
 	}
@@ -115,7 +119,7 @@ public class ClientLogController {
 				writeToFile(log);
 			}
 			view.showInfoMessage("Save all logs",
-					"Logs were saved at \n" + new File(Resource.LOGS_CLIENT_DIRECTORY).getAbsolutePath());
+					"Logs were saved at \n" + new File(Resources.LOGS_CLIENT_DIRECTORY).getAbsolutePath());
 		} catch (IOException e) {
 			e.printStackTrace();
 			view.showErrorMessage("Save all logs", "Error:\n" + e.getMessage());
