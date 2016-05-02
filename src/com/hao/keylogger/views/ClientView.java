@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.sql.Savepoint;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -25,6 +24,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import com.hao.keylogger.controllers.Client.ClientLogController;
 import com.hao.keylogger.controllers.Client.IClientView;
@@ -64,14 +65,6 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 
 	public ClientView() {
 		InitFrame();
-		// TODO set look and feel
-		// try {
-		// UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		// } catch (ClassNotFoundException | InstantiationException |
-		// IllegalAccessException
-		// | UnsupportedLookAndFeelException e) {
-		// e.printStackTrace();
-		// }
 	}
 
 	@Override

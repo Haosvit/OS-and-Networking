@@ -59,10 +59,16 @@ public class FileManager {
 	 */
 	public void writeLogToFile(Log log, String filePath) {
 		try {
+			File fol = new File(new File(filePath).getParent());
+			if (!fol.exists()) {
+				fol.mkdir();
+			}
 			FileOutputStream fout = new FileOutputStream(filePath);
 			ObjectOutputStream out = new ObjectOutputStream(fout);
 			
 			out.writeObject(log);
+			out.close();
+			fout.close();			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -76,11 +82,15 @@ public class FileManager {
 	 */
 	
 	public Log loadLogFromFile(String filePath) {
+		Log log = new Log();
 			try {
 				FileInputStream fin = new FileInputStream(filePath);
 				ObjectInputStream in = new ObjectInputStream(fin);
 				try {
-					return (Log) in.readObject();
+					log = (Log) in.readObject();
+					fin.close();
+					in.close();
+					return log;
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				}
