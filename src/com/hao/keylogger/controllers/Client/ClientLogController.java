@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.StringTokenizer;
@@ -12,16 +11,17 @@ import java.util.StringTokenizer;
 import javax.swing.JFrame;
 
 import com.hao.keylogger.models.Log;
-import com.hao.keylogger.models.Resources;
 import com.hao.keylogger.utils.FileManager;
+import com.hao.keylogger.utils.LogConverter;
+import com.hao.keylogger.utils.Resources;
 import com.hao.keylogger.views.ClientView;
 
 public class ClientLogController {
 	private ClientView view;
 	ArrayList<Log> logs = new ArrayList<Log>();
-
+	Log currentLog = new Log();
 	private boolean isLoggerRunning = true;
-
+	private boolean isLogConverted = false;
 	public ClientLogController(ClientView view) {
 		super();
 		this.view = view;
@@ -39,8 +39,8 @@ public class ClientLogController {
 	}
 
 	public void displayLog(int index) {
-		Log log = logs.get(index);
-		view.setLogContent(log.getContent());
+		currentLog = logs.get(index);
+		view.setLogContent(currentLog.getContent());
 		view.scrollLogViewToTop();
 	}
 
@@ -165,6 +165,8 @@ public class ClientLogController {
 	}
 
 	public void loadAllSavedLogs() {
+		logs.clear();
+		isLogConverted = false;
 		File logFolder = new File(Resources.LOGS_CLIENT_DIRECTORY);
 		File[] logFiles = logFolder.listFiles();
 		if (logFiles.length > 0) {
@@ -210,6 +212,20 @@ public class ClientLogController {
 			}
 			break;
 		}
+	}
+
+	public void switchView() {
+		if (!isLogConverted) {
+			LogConverter logConverter = new LogConverter();
+			String convertedLog = logConverter.convert(currentLog.getContent());
+			view.setLogContent(convertedLog);
+			isLogConverted = true;
+		}
+		else {
+			view.setLogContent(currentLog.getContent());
+			isLogConverted = false;
+		}
+		
 	}
 
 }

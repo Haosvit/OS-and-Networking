@@ -13,8 +13,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.StringTokenizer;
 
-import com.hao.keylogger.models.Resources;
 import com.hao.keylogger.utils.FileManager;
+import com.hao.keylogger.utils.Resources;
 
 public class UDPServerHelper {
 
@@ -38,7 +38,7 @@ public class UDPServerHelper {
 
 	Thread listenThread;
 
-	private UDPServerHelper(String hostName, int port) {
+	public UDPServerHelper(String hostName, int port) {
 		this.hostName = hostName;
 		this.hostPort = port;
 	}

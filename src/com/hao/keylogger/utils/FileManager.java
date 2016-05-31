@@ -14,7 +14,6 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 
 import com.hao.keylogger.models.Log;
-import com.hao.keylogger.models.Resources;
 
 public class FileManager {
 	private String filePath;

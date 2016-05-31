@@ -52,6 +52,8 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 
 	private static final String WINDOW_TITLE = "Keylogger Client";
 
+	private static final String BTN_SWITCH_VIEW = "btn_switchView";
+
 	ClientLogController controller;
 
 	JTextField tf_host;
@@ -114,7 +116,7 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 	}
 
 	private void InitFrame() {
-		setSize(700, 400);
+		setSize(800, 600);
 		setTitle(WINDOW_TITLE);
 		// get screen size
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -192,11 +194,17 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		JButton btn_saveAllLogs = new JButton("Save all logs");
 		btn_saveAllLogs.setName(BTN_SAVE_ALL_LOGS);
 		btn_saveAllLogs.addActionListener(this);
+		
+		// button convert log		
+		JButton btn_switchView = new JButton("Switch view");
+		btn_switchView.setName(BTN_SWITCH_VIEW);
+		btn_switchView.addActionListener(this);
 
 		logViewFuncPanel.add(list_logList);
 		logViewFuncPanel.add(Box.createRigidArea(new Dimension(30, 0)));
 		logViewFuncPanel.add(btn_saveLog);
 		logViewFuncPanel.add(btn_saveAllLogs);
+		logViewFuncPanel.add(btn_switchView);
 
 		northPanel.add(conPanel);
 		northPanel.add(networkFuncPanel);
@@ -240,6 +248,11 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 				case BTN_SAVE_ALL_LOGS:
 					controller.saveAllLogs();
 					break;
+				case BTN_SWITCH_VIEW:
+					controller.switchView();
+					break;
+					default: 
+						break;
 				}
 			} else if (event.getSource().getClass().equals(Class.forName("javax.swing.JComboBox"))) {
 				// combobox clicked

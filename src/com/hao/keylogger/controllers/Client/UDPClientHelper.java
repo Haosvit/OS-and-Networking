@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.hao.keylogger.models.Log;
-import com.hao.keylogger.models.Resources;
+import com.hao.keylogger.utils.Resources;
 
 public class UDPClientHelper {
 	public enum ReceiveMode {

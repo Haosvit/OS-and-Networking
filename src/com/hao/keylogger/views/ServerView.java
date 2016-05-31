@@ -93,25 +93,8 @@ public class ServerView extends JFrame implements ActionListener, IServerView {
 		JButton source = (JButton) e.getSource();
 		switch (source.getName()) {
 		case BTN_START_SERVER_NAME:
-			// if (!isServerStarted) {
-			// if (
 			controller.toggleServerOnOrOff();
-			// ) {
-			// isServerStarted = true;
-			// source.setText("Stop server");
-			// }
-			// else {
-			// JOptionPane.showMessageDialog(null, "Server is already running!",
-			// "Start server error", JOptionPane.ERROR_MESSAGE);
-			// }
-			// }
-			// else {
-			// if (controller.stopServer()) {
-			// isServerStarted = false;
-			// source.setText("Start server");
-			// }
-			// }
-			// break;
+			break;
 		}
 	}
 

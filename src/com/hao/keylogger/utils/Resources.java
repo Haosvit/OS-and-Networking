@@ -1,7 +1,7 @@
-package com.hao.keylogger.models;
+package com.hao.keylogger.utils;
 
 public interface Resources {
-	final int DEFAULT_PORT = 17;
+	final int DEFAULT_PORT = 4567;
 	
 	//buffers
 	/**
