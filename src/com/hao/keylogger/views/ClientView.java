@@ -106,8 +106,8 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 	}
 
 	@Override
-	public void setLogContent(String log) {
-		ta_logView.setText(log);
+	public void setLogContent(String logContent) {
+			ta_logView.setText(logContent);
 	}
 
 	@Override
@@ -168,8 +168,6 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		networkFuncPanel.add(btn_fetchLog);
 		btn_fetchLog.addActionListener(this);
 
-		networkFuncPanel.add(Box.createRigidArea(new Dimension(30, 0)));
-
 		// button fetch all log
 		JButton btn_fetchAllLog = new JButton("Fetch all logs");
 		btn_fetchAllLog.setName(BTN_FETCH_ALL_LOG_NAME);
@@ -201,7 +199,6 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		btn_switchView.addActionListener(this);
 
 		logViewFuncPanel.add(list_logList);
-		logViewFuncPanel.add(Box.createRigidArea(new Dimension(30, 0)));
 		logViewFuncPanel.add(btn_saveLog);
 		logViewFuncPanel.add(btn_saveAllLogs);
 		logViewFuncPanel.add(btn_switchView);

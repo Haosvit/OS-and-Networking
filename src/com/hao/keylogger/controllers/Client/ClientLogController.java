@@ -40,7 +40,15 @@ public class ClientLogController {
 
 	public void displayLog(int index) {
 		currentLog = logs.get(index);
-		view.setLogContent(currentLog.getContent());
+		String logContent = "";
+		LogConverter logConverter = new LogConverter();
+		if (isLogConverted) {
+			logContent = logConverter.convert(currentLog.getContent());
+		}
+		else {
+			logContent = currentLog.getContent();
+		}
+		view.setLogContent(logContent);
 		view.scrollLogViewToTop();
 	}
 
@@ -166,7 +174,6 @@ public class ClientLogController {
 
 	public void loadAllSavedLogs() {
 		logs.clear();
-		isLogConverted = false;
 		File logFolder = new File(Resources.LOGS_CLIENT_DIRECTORY);
 		File[] logFiles = logFolder.listFiles();
 		if (logFiles.length > 0) {
@@ -225,6 +232,11 @@ public class ClientLogController {
 			view.setLogContent(currentLog.getContent());
 			isLogConverted = false;
 		}
+		
+	}
+
+	public void receiveMessage(String msg) {
+		view.showErrorMessage("Fetch log", msg);
 		
 	}
 

@@ -147,9 +147,9 @@ public class UDPClientHelper {
 					getMessage();
 					break;
 				}
-				// end switch
 			} catch (Exception ex) {
 				ex.printStackTrace();
+				controller.receiveMessage("Can not fetch logs!");
 			}
 
 		}
