@@ -23,6 +23,10 @@ import com.hao.keylogger.controllers.server.ServerLogController;
 public class ServerView extends JFrame implements ActionListener, IServerView {
 	private static final String WINDOW_TITLE = "Keylogger Server";
 
+	private static final String BTN_LOGGER = "btn_logger";
+
+	private static final String BTN_DEL_LOG = "btn_delete_logs";
+
 	private final String BTN_START_SERVER_NAME = "btn_startServer";
 
 	ServerLogController controller;
@@ -31,7 +35,9 @@ public class ServerView extends JFrame implements ActionListener, IServerView {
 	JTextField tf_port;
 	JTextArea ta_monitor;
 	JButton btn_startServer;
-
+	JButton btn_logger;
+	JButton btn_deleteLogs;
+	
 	boolean isServerStarted = false;
 
 	public ServerView() {
@@ -72,9 +78,22 @@ public class ServerView extends JFrame implements ActionListener, IServerView {
 		conPanel.add(lb_port);
 		conPanel.add(tf_port);
 		conPanel.add(btn_startServer);
-
+		
+		JPanel loggerPanel = new JPanel();
+		
+		btn_logger = new JButton("Start key logger");
+		btn_logger.setName(BTN_LOGGER);
+		btn_logger.addActionListener(this);
+		
+		btn_deleteLogs = new JButton("Delete all logs");
+		btn_deleteLogs.setName(BTN_DEL_LOG);
+		btn_deleteLogs.addActionListener(this);
+		
+		loggerPanel.add(btn_logger);
+		loggerPanel.add(btn_deleteLogs);
+		
 		northPanel.add(conPanel);
-
+		northPanel.add(loggerPanel);
 		// center
 		ta_monitor = new JTextArea(5, 10);
 		ta_monitor.setEditable(false);
@@ -95,6 +114,13 @@ public class ServerView extends JFrame implements ActionListener, IServerView {
 		case BTN_START_SERVER_NAME:
 			controller.toggleServerOnOrOff();
 			break;
+		case BTN_LOGGER:
+			controller.toggleLogger();
+			break;
+		case BTN_DEL_LOG:
+			controller.deleteAllHostLogs();
+			break;
+			default: break;
 		}
 	}
 
@@ -143,5 +169,14 @@ public class ServerView extends JFrame implements ActionListener, IServerView {
 
 	public void updateViewWhenServerIsStopped() {
 		btn_startServer.setText("Start server");
+	}
+
+	public void updateLoggerState(boolean isRunning) {
+		if (isRunning) {
+			btn_logger.setText("Stop key logger");
+		}
+		else {
+			btn_logger.setText("Start key logger");
+		}
 	}
 }

