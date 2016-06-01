@@ -1,27 +1,27 @@
 package com.hao.keylogger.views;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JToolBar;
 
 import com.hao.keylogger.controllers.server.IServerView;
 import com.hao.keylogger.controllers.server.ServerLogController;
+import com.hao.keylogger.utils.Resources;
 
 public class ServerView extends JFrame implements ActionListener, IServerView {
-	private static final String WINDOW_TITLE = "Keylogger Server";
+	private static final String WINDOW_TITLE = "Key logger Server";
 
 	private static final String BTN_LOGGER = "btn_logger";
 
@@ -51,49 +51,52 @@ public class ServerView extends JFrame implements ActionListener, IServerView {
 		// get screen size
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setLocation(screenSize.width / 2 - this.getWidth() / 2, screenSize.height / 2 - this.getHeight() / 2);
-
+		setMinimumSize(new Dimension(700, 400));
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-
+		
 		// North panel
 		JPanel northPanel = new JPanel();
 		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 
 		// connection panel
-		JPanel conPanel = new JPanel();
 		JLabel lb_host = new JLabel("Host");
-		tf_host = new JTextField();
-		tf_host.setColumns(15);
+		tf_host = new JTextField(15);
 
 		JLabel lb_port = new JLabel("Port");
-		tf_port = new JTextField();
-		tf_port.setColumns(4);
+		tf_port = new JTextField(4);
 
 		btn_startServer = new JButton("Start server");
 		btn_startServer.setName(BTN_START_SERVER_NAME);
-		btn_startServer.setPreferredSize(new Dimension(150, 25));
+		btn_startServer.setIcon(Resources.IC_START);
 		btn_startServer.addActionListener(this);
 
-		conPanel.add(lb_host);
-		conPanel.add(tf_host);
-		conPanel.add(lb_port);
-		conPanel.add(tf_port);
-		conPanel.add(btn_startServer);
+		JToolBar conn_toolbar = new JToolBar();
+		conn_toolbar.setLayout(new FlowLayout(FlowLayout.LEFT));
 		
-		JPanel loggerPanel = new JPanel();
+		conn_toolbar.add(lb_host);
+		conn_toolbar.add(tf_host);
+		conn_toolbar.add(lb_port);
+		conn_toolbar.add(tf_port);
+		conn_toolbar.add(btn_startServer);
 		
 		btn_logger = new JButton("Start key logger");
 		btn_logger.setName(BTN_LOGGER);
+		btn_logger.setIcon(Resources.IC_START);
 		btn_logger.addActionListener(this);
 		
 		btn_deleteLogs = new JButton("Delete all logs");
 		btn_deleteLogs.setName(BTN_DEL_LOG);
+		btn_deleteLogs.setIcon(Resources.IC_DELETE);
 		btn_deleteLogs.addActionListener(this);
 		
-		loggerPanel.add(btn_logger);
-		loggerPanel.add(btn_deleteLogs);
+		JToolBar logger_toolbar = new JToolBar();
+		logger_toolbar.setLayout(new FlowLayout(FlowLayout.LEFT));
+		logger_toolbar.add(btn_logger);
+		logger_toolbar.add(btn_deleteLogs);
 		
-		northPanel.add(conPanel);
-		northPanel.add(loggerPanel);
+		northPanel.add(conn_toolbar);
+		northPanel.add(logger_toolbar);
+		
 		// center
 		ta_monitor = new JTextArea(5, 10);
 		ta_monitor.setEditable(false);
@@ -165,18 +168,22 @@ public class ServerView extends JFrame implements ActionListener, IServerView {
 
 	public void updateViewWhenServerIsStarted() {
 		btn_startServer.setText("Stop server");
+		btn_startServer.setIcon(Resources.IC_STOP);
 	}
 
 	public void updateViewWhenServerIsStopped() {
 		btn_startServer.setText("Start server");
+		btn_startServer.setIcon(Resources.IC_START);
 	}
 
 	public void updateLoggerState(boolean isRunning) {
 		if (isRunning) {
 			btn_logger.setText("Stop key logger");
+			btn_logger.setIcon(Resources.IC_STOP);
 		}
 		else {
 			btn_logger.setText("Start key logger");
+			btn_logger.setIcon(Resources.IC_START);
 		}
 	}
 }

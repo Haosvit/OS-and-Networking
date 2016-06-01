@@ -1,5 +1,7 @@
 package com.hao.keylogger.utils;
 
+import javax.swing.ImageIcon;
+
 public interface Resources {
 	final int DEFAULT_PORT = 4567;
 	
@@ -33,6 +35,19 @@ public interface Resources {
 	final String KEY_LOGGER_PATH = "HookKeyboard.exe";
 
 	final String KEY_LOGGER_NAME = "HookKeyboard.exe";
-	final String START_LOGGER_BATCH_FILE_NAME = "start_logger.bat";
+	final String START_LOGGER_BATCH_FILE_NAME = "start_logger.bat";	
+
+	
+	// icons
+	public static final ImageIcon IC_FETCH = new ImageIcon("./Icons/fetch.png");
+	public static final ImageIcon IC_FETCH_ALL = new ImageIcon("./Icons/fetch_all.png");	
+	public static final ImageIcon IC_EXIT = new ImageIcon("./Icons/exit.png");
+	public static final ImageIcon IC_SAVE = new ImageIcon("./Icons/save.png");
+	public static final ImageIcon IC_SAVE_ALL = new ImageIcon("./Icons/save_all.png");	
+	public static final ImageIcon IC_SWITCH_VIEW = new ImageIcon("./Icons/switch_view.png");
+	public static final ImageIcon IC_LOAD_ALL = new ImageIcon("./Icons/load.png");
+	public static final ImageIcon IC_STOP = new ImageIcon("./Icons/stop.png");
+	public static final ImageIcon IC_START = new ImageIcon("./Icons/start.png");
+	public static final ImageIcon IC_DELETE = new ImageIcon("./Icons/delete.png");
 	
 }

@@ -3,7 +3,10 @@
  */
 package com.hao.keylogger.views;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -13,7 +16,6 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
 
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -24,35 +26,30 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.JToolBar;
 
 import com.hao.keylogger.controllers.Client.ClientLogController;
 import com.hao.keylogger.controllers.Client.IClientView;
+import com.hao.keylogger.utils.Resources;
 
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 /**
- * @author Hao Svit
+ * @author Nguyen Phuc Hao
  *
  */
 public class ClientView extends JFrame implements ActionListener, IClientView {
-	private static final String BTN_REMOTE_CONTROL = "btn_remoteControl";
-
-	private static final String BTN_SAVE_ALL_LOGS = "btn_saveAllLogs";
-
-	private static final String BTN_SAVE_LOG = "btn_saveLog";
-
 	private static final long serialVersionUID = 1L;
 
+	private static final String BTN_SAVE_ALL_LOGS = "btn_saveAllLogs";
+	private static final String BTN_SAVE_LOG = "btn_saveLog";
 	private static final String BTN_FETCH_LOG_NAME = "btn_fetchLog";
 	private static final String BTN_FETCH_ALL_LOG_NAME = "btn_fetchAllLog";
-
-	private static final String WINDOW_TITLE = "Keylogger Client";
-
+	private static final String WINDOW_TITLE = "Key logger Client";
 	private static final String BTN_SWITCH_VIEW = "btn_switchView";
+	private static final String BTN_LOAD_SAVED_LOGS = "btn_loadAllLogs";
 
 	ClientLogController controller;
 
@@ -107,7 +104,7 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 
 	@Override
 	public void setLogContent(String logContent) {
-			ta_logView.setText(logContent);
+		ta_logView.setText(logContent);
 	}
 
 	@Override
@@ -121,7 +118,7 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		// get screen size
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setLocation(screenSize.width / 2 - this.getWidth() / 2, screenSize.height / 2 - this.getHeight() / 2);
-
+		setMinimumSize(new Dimension(800, 600));
 		// menu
 		menubar = new ClientMenuBar(this);
 
@@ -129,8 +126,6 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		JPanel northPanel = new JPanel();
 		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 
-		// connection panel
-		JPanel conPanel = new JPanel();
 		JLabel lb_host = new JLabel("Host");
 		tf_host = new JTextField();
 		tf_host.setColumns(15);
@@ -139,44 +134,33 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		tf_port = new JTextField();
 		tf_port.setColumns(4);
 
-		conPanel.add(lb_host);
-		conPanel.add(tf_host);
-		conPanel.add(lb_port);
-		conPanel.add(tf_port);
-
-		// Fucntions panel
-		JPanel networkFuncPanel = new JPanel();
-
-		// function panel for log view
-		JPanel logViewFuncPanel = new JPanel();
-
 		// label choose date
 		JLabel lb_chooseDate = new JLabel("Choose date");
-		networkFuncPanel.add(lb_chooseDate);
-
 		// Date picker
 		UtilDateModel dateModel = new UtilDateModel();
 		dateModel.setValue(new Date());
 		JDatePanelImpl datePanel = new JDatePanelImpl(dateModel);
 		datePicker = new JDatePickerImpl(datePanel);
 
-		networkFuncPanel.add(datePicker);
-
 		// button fetch log
 		JButton btn_fetchLog = new JButton("Fetch log");
 		btn_fetchLog.setName(BTN_FETCH_LOG_NAME);
-		networkFuncPanel.add(btn_fetchLog);
 		btn_fetchLog.addActionListener(this);
+		btn_fetchLog.setIcon(Resources.IC_FETCH);
 
 		// button fetch all log
 		JButton btn_fetchAllLog = new JButton("Fetch all logs");
 		btn_fetchAllLog.setName(BTN_FETCH_ALL_LOG_NAME);
-		networkFuncPanel.add(btn_fetchAllLog);
+		btn_fetchAllLog.setIcon(Resources.IC_FETCH_ALL);
 		btn_fetchAllLog.addActionListener(this);
+
+		JButton btn_loadSavedLogs = new JButton("Load all save logs");
+		btn_loadSavedLogs.setName(BTN_LOAD_SAVED_LOGS);
+		btn_loadSavedLogs.setIcon(Resources.IC_LOAD_ALL);
+		btn_loadSavedLogs.addActionListener(this);
 
 		// label choose log to show
 		JLabel lb_chooseLog = new JLabel("Choose log");
-		logViewFuncPanel.add(lb_chooseLog);
 
 		// log list
 		list_logList = new JComboBox<String>();
@@ -186,36 +170,67 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		// button save log
 		JButton btn_saveLog = new JButton("Save log");
 		btn_saveLog.setName(BTN_SAVE_LOG);
+		btn_saveLog.setIcon(Resources.IC_SAVE);
 		btn_saveLog.addActionListener(this);
 
 		// button save all logs
 		JButton btn_saveAllLogs = new JButton("Save all logs");
 		btn_saveAllLogs.setName(BTN_SAVE_ALL_LOGS);
+		btn_saveAllLogs.setIcon(Resources.IC_SAVE_ALL);
 		btn_saveAllLogs.addActionListener(this);
-		
-		// button convert log		
+
+		// button convert log
 		JButton btn_switchView = new JButton("Switch view");
 		btn_switchView.setName(BTN_SWITCH_VIEW);
+		btn_switchView.setIcon(Resources.IC_SWITCH_VIEW);
 		btn_switchView.addActionListener(this);
 
-		logViewFuncPanel.add(list_logList);
-		logViewFuncPanel.add(btn_saveLog);
-		logViewFuncPanel.add(btn_saveAllLogs);
-		logViewFuncPanel.add(btn_switchView);
+		// fetch toolbar
+		JToolBar fetch_toolbar = new JToolBar();
+		fetch_toolbar.setLayout(new FlowLayout(FlowLayout.LEFT));
+		fetch_toolbar.add(lb_chooseDate);
+		fetch_toolbar.add(datePicker);
+		fetch_toolbar.add(btn_fetchLog);
+		fetch_toolbar.addSeparator();
+		fetch_toolbar.add(btn_fetchAllLog);
+		
+		// connectin toolbar
+		JToolBar conn_toolbar = new JToolBar();
+		conn_toolbar.setLayout(new FlowLayout(FlowLayout.LEFT));
+		conn_toolbar.add(lb_host);
+		conn_toolbar.add(tf_host);
+		conn_toolbar.add(lb_port);
+		conn_toolbar.add(tf_port);
+		conn_toolbar.addSeparator();
+		conn_toolbar.setLayout(new FlowLayout(FlowLayout.LEFT));
+		conn_toolbar.add(lb_chooseDate);
+		conn_toolbar.add(datePicker);
+		conn_toolbar.add(btn_fetchLog);
+		conn_toolbar.addSeparator();
+		conn_toolbar.add(btn_fetchAllLog);
 
-		northPanel.add(conPanel);
-		northPanel.add(networkFuncPanel);
-		northPanel.add(logViewFuncPanel);
+		// logview toolbar
+		JToolBar logView_toolbar = new JToolBar();
+		logView_toolbar.setLayout(new FlowLayout(FlowLayout.LEFT));
+		logView_toolbar.add(btn_loadSavedLogs);
+		logView_toolbar.add(lb_chooseLog);
+		logView_toolbar.add(list_logList);
+		logView_toolbar.add(btn_saveLog);
+		logView_toolbar.add(btn_saveAllLogs);
+		logView_toolbar.add(btn_switchView);
+
+		northPanel.add(conn_toolbar);
+		northPanel.add(logView_toolbar);
 
 		ta_logView = new JTextArea(5, 10);
 		ta_logView.setLineWrap(true);
 		ta_logView.setWrapStyleWord(true);
 		ta_logView.setEditable(false);
-		ta_logView.setMargin(new Insets(4, 4, 4, 4));
+		ta_logView.setMargin(new Insets(5, 5, 5, 5));
 		JScrollPane scrollPane = new JScrollPane(ta_logView);
-		// TODO add status bar
 
 		setJMenuBar(menubar);
+
 		// adding panels to main container
 		getContentPane().add(northPanel, "North");
 		getContentPane().add(scrollPane);
@@ -248,8 +263,11 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 				case BTN_SWITCH_VIEW:
 					controller.switchView();
 					break;
-					default: 
-						break;
+				case BTN_LOAD_SAVED_LOGS:
+					controller.loadAllSavedLogs();
+					break;
+				default:
+					break;
 				}
 			} else if (event.getSource().getClass().equals(Class.forName("javax.swing.JComboBox"))) {
 				// combobox clicked
@@ -260,7 +278,6 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 				}
 			}
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -149,7 +149,7 @@ public class UDPClientHelper {
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
-				controller.receiveMessage("Can not fetch logs!");
+				controller.receiveMessage("Server is not running!");
 			}
 
 		}

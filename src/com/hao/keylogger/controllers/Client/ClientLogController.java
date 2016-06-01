@@ -21,7 +21,7 @@ public class ClientLogController {
 	ArrayList<Log> logs = new ArrayList<Log>();
 	Log currentLog = new Log();
 	private boolean isLoggerRunning = true;
-	private boolean isLogConverted = false;
+	private boolean isLogConverted = true;
 	public ClientLogController(ClientView view) {
 		super();
 		this.view = view;
@@ -50,6 +50,7 @@ public class ClientLogController {
 		}
 		view.setLogContent(logContent);
 		view.scrollLogViewToTop();
+		System.out.println(currentLog.getName() + " " + currentLog.getHost() + " " + currentLog.getPort() + " " + currentLog.getDateOfLog().toString());
 	}
 
 	public void fetchLog(Date date) {
@@ -204,6 +205,7 @@ public class ClientLogController {
 			if (isSuccessful) {
 				view.updateMenuItemWhenLoggerStop();
 				view.showInfoMessage("Key logger - Stop logger", serverMsg);
+				view.updateMenuItemWhenLoggerStop();
 				isLoggerRunning = false;
 			} else {
 				view.showErrorMessage("Key logger - Stop logger", serverMsg);
@@ -236,8 +238,7 @@ public class ClientLogController {
 	}
 
 	public void receiveMessage(String msg) {
-		view.showErrorMessage("Fetch log", msg);
-		
+		view.showErrorMessage("Fetch log", msg);		
 	}
 
 }
