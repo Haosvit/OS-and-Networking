@@ -49,7 +49,7 @@ public class ServerLogController {
 				view.updateViewWhenServerIsStarted();
 			}
 			else {
-				view.appendToMonitor("Can not start server! The server may be running.\n");
+				view.appendToMonitor("Can not start server!\n");
 			}
 		}
 		else {
