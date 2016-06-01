@@ -1,4 +1,6 @@
-package com.hao.keylogger.controllers.server;
+package com.hao.keylogger.views;
+
+import com.hao.keylogger.controllers.server.ServerLogController;
 
 public interface IServerView {
 	String getHost();

@@ -4,10 +4,13 @@
 package com.hao.keylogger.views;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Insets;
+import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +19,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -29,7 +33,6 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 
 import com.hao.keylogger.controllers.Client.ClientLogController;
-import com.hao.keylogger.controllers.Client.IClientView;
 import com.hao.keylogger.utils.Resources;
 
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
@@ -140,8 +143,8 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		UtilDateModel dateModel = new UtilDateModel();
 		dateModel.setValue(new Date());
 		JDatePanelImpl datePanel = new JDatePanelImpl(dateModel);
-		datePicker = new JDatePickerImpl(datePanel);
-
+		datePicker = new JDatePickerImpl(datePanel);		
+		
 		// button fetch log
 		JButton btn_fetchLog = new JButton("Fetch log");
 		btn_fetchLog.setName(BTN_FETCH_LOG_NAME);
@@ -185,30 +188,19 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		btn_switchView.setIcon(Resources.IC_SWITCH_VIEW);
 		btn_switchView.addActionListener(this);
 
-		// fetch toolbar
-		JToolBar fetch_toolbar = new JToolBar();
-		fetch_toolbar.setLayout(new FlowLayout(FlowLayout.LEFT));
-		fetch_toolbar.add(lb_chooseDate);
-		fetch_toolbar.add(datePicker);
-		fetch_toolbar.add(btn_fetchLog);
-		fetch_toolbar.addSeparator();
-		fetch_toolbar.add(btn_fetchAllLog);
-		
-		// connectin toolbar
-		JToolBar conn_toolbar = new JToolBar();
-		conn_toolbar.setLayout(new FlowLayout(FlowLayout.LEFT));
-		conn_toolbar.add(lb_host);
-		conn_toolbar.add(tf_host);
-		conn_toolbar.add(lb_port);
-		conn_toolbar.add(tf_port);
-		conn_toolbar.addSeparator();
-		conn_toolbar.setLayout(new FlowLayout(FlowLayout.LEFT));
-		conn_toolbar.add(lb_chooseDate);
-		conn_toolbar.add(datePicker);
-		conn_toolbar.add(btn_fetchLog);
-		conn_toolbar.addSeparator();
-		conn_toolbar.add(btn_fetchAllLog);
-
+		JPanel connPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		connPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		connPanel.add(lb_host);
+		connPanel.add(tf_host);
+		connPanel.add(lb_port);
+		connPanel.add(tf_port);
+		connPanel.add(Box.createRigidArea(new Dimension(2, 5)));
+		connPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		connPanel.add(lb_chooseDate);
+		connPanel.add(datePicker);
+		connPanel.add(btn_fetchLog);
+		connPanel.add(Box.createRigidArea(new Dimension(2, 5)));
+		connPanel.add(btn_fetchAllLog);
 		// logview toolbar
 		JToolBar logView_toolbar = new JToolBar();
 		logView_toolbar.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -218,9 +210,18 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		logView_toolbar.add(btn_saveLog);
 		logView_toolbar.add(btn_saveAllLogs);
 		logView_toolbar.add(btn_switchView);
+		
+		JPanel logViewPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		logViewPanel.add(btn_loadSavedLogs);
+		logViewPanel.add(lb_chooseLog);
+		logViewPanel.add(list_logList);
+		logViewPanel.add(btn_saveLog);
+		logViewPanel.add(btn_saveAllLogs);
+		logViewPanel.add(btn_switchView);
+		
 
-		northPanel.add(conn_toolbar);
-		northPanel.add(logView_toolbar);
+		northPanel.add(connPanel);
+		northPanel.add(logViewPanel);
 
 		ta_logView = new JTextArea(5, 10);
 		ta_logView.setLineWrap(true);

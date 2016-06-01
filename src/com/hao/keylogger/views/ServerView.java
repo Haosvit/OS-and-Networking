@@ -17,7 +17,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 
-import com.hao.keylogger.controllers.server.IServerView;
 import com.hao.keylogger.controllers.server.ServerLogController;
 import com.hao.keylogger.utils.Resources;
 
@@ -71,14 +70,13 @@ public class ServerView extends JFrame implements ActionListener, IServerView {
 		btn_startServer.setIcon(Resources.IC_START);
 		btn_startServer.addActionListener(this);
 
-		JToolBar conn_toolbar = new JToolBar();
-		conn_toolbar.setLayout(new FlowLayout(FlowLayout.LEFT));
-		
-		conn_toolbar.add(lb_host);
-		conn_toolbar.add(tf_host);
-		conn_toolbar.add(lb_port);
-		conn_toolbar.add(tf_port);
-		conn_toolbar.add(btn_startServer);
+		JPanel connPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+		connPanel.add(lb_host);
+		connPanel.add(tf_host);
+		connPanel.add(lb_port);
+		connPanel.add(tf_port);
+		connPanel.add(btn_startServer);
 		
 		btn_logger = new JButton("Start key logger");
 		btn_logger.setName(BTN_LOGGER);
@@ -90,13 +88,12 @@ public class ServerView extends JFrame implements ActionListener, IServerView {
 		btn_deleteLogs.setIcon(Resources.IC_DELETE);
 		btn_deleteLogs.addActionListener(this);
 		
-		JToolBar logger_toolbar = new JToolBar();
-		logger_toolbar.setLayout(new FlowLayout(FlowLayout.LEFT));
-		logger_toolbar.add(btn_logger);
-		logger_toolbar.add(btn_deleteLogs);
+		JPanel loggerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		loggerPanel.add(btn_logger);
+		loggerPanel.add(btn_deleteLogs);
 		
-		northPanel.add(conn_toolbar);
-		northPanel.add(logger_toolbar);
+		northPanel.add(connPanel);
+		northPanel.add(loggerPanel);
 		
 		// center
 		ta_monitor = new JTextArea(5, 10);
