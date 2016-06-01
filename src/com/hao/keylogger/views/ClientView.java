@@ -31,6 +31,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import com.hao.keylogger.controllers.Client.ClientLogController;
 import com.hao.keylogger.utils.Resources;
@@ -43,7 +45,7 @@ import net.sourceforge.jdatepicker.impl.UtilDateModel;
  * @author Nguyen Phuc Hao
  *
  */
-public class ClientView extends JFrame implements ActionListener, IClientView {
+public class ClientView extends JFrame implements ActionListener, IClientView, ILookAndFeel {
 	private static final long serialVersionUID = 1L;
 
 	private static final String BTN_SAVE_ALL_LOGS = "btn_saveAllLogs";
@@ -66,6 +68,7 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 	ArrayList<String> logListNames = new ArrayList<String>();
 
 	public ClientView() {
+		setLookAndFeel();
 		InitFrame();
 	}
 
@@ -357,5 +360,14 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 
 	public void updateLogInfo(String info) {
 		lb_logInfoContent.setText(info);
+	}
+
+	@Override
+	public void setLookAndFeel() {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+				| UnsupportedLookAndFeelException e) {
+		}
 	}
 }

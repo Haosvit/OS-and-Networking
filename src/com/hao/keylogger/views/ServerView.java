@@ -16,11 +16,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import com.hao.keylogger.controllers.server.ServerLogController;
 import com.hao.keylogger.utils.Resources;
 
-public class ServerView extends JFrame implements ActionListener, IServerView {
+public class ServerView extends JFrame implements ActionListener, IServerView, ILookAndFeel{
 	private static final String WINDOW_TITLE = "Key logger Server";
 
 	private static final String BTN_LOGGER = "btn_logger";
@@ -41,7 +43,8 @@ public class ServerView extends JFrame implements ActionListener, IServerView {
 	boolean isServerStarted = false;
 
 	public ServerView() {
-		initFrame();
+		setLookAndFeel();
+		initFrame();		
 	}
 
 	private void initFrame() {
@@ -187,6 +190,15 @@ public class ServerView extends JFrame implements ActionListener, IServerView {
 		else {
 			btn_logger.setText("Start key logger");
 			btn_logger.setIcon(Resources.IC_START);
+		}
+	}
+
+	@Override
+	public void setLookAndFeel() {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+				| UnsupportedLookAndFeelException e) {
 		}
 	}
 }

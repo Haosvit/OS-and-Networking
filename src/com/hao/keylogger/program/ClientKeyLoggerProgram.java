@@ -10,15 +10,14 @@ import com.hao.keylogger.models.Log;
 import com.hao.keylogger.views.ClientView;
 import com.hao.keylogger.views.ILookAndFeel;
 
-public class ClientKeyLoggerProgram implements ILookAndFeel{
+public class ClientKeyLoggerProgram {
 
 	public ClientKeyLoggerProgram() {
 		
 	}
 	
 	public static void main(String[] args) {
-		ILookAndFeel.setLookAndFeel();
-		ClientView clientView =   new ClientView();		
+		ClientView clientView =   new ClientView();	
 		ClientLogController controller = new ClientLogController(clientView);
 	}
 

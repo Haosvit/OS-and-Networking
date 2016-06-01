@@ -5,11 +5,5 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 public interface ILookAndFeel {
 	
-	static void setLookAndFeel() {
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-				| UnsupportedLookAndFeelException e) {
-		}
-	}
+	void setLookAndFeel();
 }
