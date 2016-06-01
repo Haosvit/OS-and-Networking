@@ -59,7 +59,7 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 	JDatePickerImpl datePicker;
 	ClientMenuBar menubar;
 	JComboBox<String> list_logList;
-
+	JLabel lb_logInfoContent;
 	ArrayList<String> logListNames = new ArrayList<String>();
 
 	public ClientView() {
@@ -230,10 +230,19 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		JScrollPane scrollPane = new JScrollPane(ta_logView);
 
 		setJMenuBar(menubar);
+		
+		JLabel lb_logInfo = new JLabel("Log information: ");
+		lb_logInfo.setIcon(Resources.IC_INFO);
+		lb_logInfoContent = new JLabel("");
+		
+		JPanel infoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		infoPanel.add(lb_logInfo);
+		infoPanel.add(lb_logInfoContent);
 
 		// adding panels to main container
 		getContentPane().add(northPanel, "North");
 		getContentPane().add(scrollPane);
+		getContentPane().add(infoPanel, "South");
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
@@ -345,4 +354,7 @@ public class ClientView extends JFrame implements ActionListener, IClientView {
 		menubar.updateMenuItemWhenLoggerStart();
 	}
 
+	public void updateLogInfo(String info) {
+		lb_logInfoContent.setText(info);
+	}
 }

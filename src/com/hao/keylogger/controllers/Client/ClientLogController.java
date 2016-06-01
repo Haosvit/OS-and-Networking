@@ -50,7 +50,7 @@ public class ClientLogController {
 		}
 		view.setLogContent(logContent);
 		view.scrollLogViewToTop();
-		System.out.println(currentLog.getName() + " " + currentLog.getHost() + " " + currentLog.getPort() + " " + currentLog.getDateOfLog().toString());
+		view.updateLogInfo("host: " + currentLog.getHost() + " | port: " + currentLog.getPort() + " | Date: " + currentLog.getDateOfLog().toString());
 	}
 
 	public void fetchLog(Date date) {

@@ -49,5 +49,6 @@ public interface Resources {
 	public static final ImageIcon IC_STOP = new ImageIcon("./Icons/stop.png");
 	public static final ImageIcon IC_START = new ImageIcon("./Icons/start.png");
 	public static final ImageIcon IC_DELETE = new ImageIcon("./Icons/delete.png");
+	public static final ImageIcon IC_INFO = new ImageIcon("./Icons/info.png");
 	
 }
