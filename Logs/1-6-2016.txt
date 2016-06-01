@@ -1,1 +1,1 @@
-A B C S D S F A S D F 
+[Left Shift] - [Left Shift] - [Left Shift] = = - 0 9 [Right Shift] 9 0 [Right Shift] 9 [Right Shift] 0 [Right Shift] [Right Shift] 5 [Right Shift] 7 [Right Shift] 8 [Left Control] S [Left Control] S 
