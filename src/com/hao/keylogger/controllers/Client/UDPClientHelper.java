@@ -213,4 +213,10 @@ public class UDPClientHelper {
 		String msg = Resources.START_LOGGER + "?";
 		sendMessageAndStartListener(msg);
 	}
+
+	public void showServerForm() {
+		receiveMode = ReceiveMode.GET_MSG;
+		String msg = Resources.SHOW_FORM + "?";
+		sendMessageAndStartListener(msg);
+	}
 }

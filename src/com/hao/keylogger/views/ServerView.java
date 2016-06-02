@@ -29,6 +29,8 @@ public class ServerView extends JFrame implements ActionListener, IServerView, I
 
 	private static final String BTN_DEL_LOG = "btn_delete_logs";
 
+	private static final String BTN_HIDE = "btn_hide";
+
 	private final String BTN_START_SERVER_NAME = "btn_startServer";
 
 	ServerLogController controller;
@@ -91,9 +93,15 @@ public class ServerView extends JFrame implements ActionListener, IServerView, I
 		btn_deleteLogs.setIcon(Resources.IC_DELETE);
 		btn_deleteLogs.addActionListener(this);
 		
+		JButton btn_hide = new JButton("Hide");
+		btn_hide.setName(BTN_HIDE);
+		btn_hide.setIcon(Resources.IC_SWITCH_VIEW);
+		btn_hide.addActionListener(this);
+		
 		JPanel loggerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		loggerPanel.add(btn_logger);
 		loggerPanel.add(btn_deleteLogs);
+		loggerPanel.add(btn_hide);
 		
 		northPanel.add(connPanel);
 		northPanel.add(loggerPanel);
@@ -108,7 +116,6 @@ public class ServerView extends JFrame implements ActionListener, IServerView, I
 		getContentPane().add(scrollPane);
 
 		setVisible(true);
-
 	}
 
 	@Override
@@ -127,7 +134,9 @@ public class ServerView extends JFrame implements ActionListener, IServerView, I
 			if (choosen == JOptionPane.YES_OPTION) {
 				controller.deleteAllHostLogs();
 			}
-			
+			break;
+		case BTN_HIDE:
+			controller.hideForm();
 			break;
 			default: break;
 		}

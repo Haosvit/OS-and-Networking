@@ -3,17 +3,15 @@
  */
 package com.hao.keylogger.views;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Graphics;
 import java.awt.Insets;
-import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -342,6 +340,26 @@ public class ClientView extends JFrame implements ActionListener, IClientView, I
 					"Key logger - Delete all host logs", JOptionPane.YES_NO_OPTION);
 			if (choosen == JOptionPane.YES_OPTION) {
 				controller.deleteAllHostLogs();
+			}
+			break;
+		case ClientMenuBar.MI_SHOW_SERVER_FORM:
+			controller.showServerForm();
+			break;
+		case ClientMenuBar.MI_DEL_SAVED_LOGS: 
+			int c = JOptionPane.showConfirmDialog(null, "Do you really want to delete all saved logs",
+					"Key logger - Delete all saved logs", JOptionPane.YES_NO_OPTION);
+			if (c == JOptionPane.YES_OPTION) {
+				if (controller.deleteSavedLogs()) {
+					showInfoMessage("Delete saved logs", "Deleted all saved logs");
+				}
+				else {
+					showErrorMessage("Delete saved logs", "Can not delete saved logs");
+				}
+			}
+			break;
+		case ClientMenuBar.MI_MANAGE_LOGS:
+			if (!controller.manageLogs()) {
+				showErrorMessage("Manage logs", "Log directory not found!");
 			}
 			break;
 		case ClientMenuBar.MI_EXIT:

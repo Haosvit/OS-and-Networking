@@ -21,6 +21,7 @@ public interface Resources {
 	//Log file
 	final String LOGS_DIRECTORY = "Logs";
 	final String LOG_FILE_EXTENSION = ".txt";
+	final String LOG_OBJECT_FILE_EXTENSION = ".klog";
 	final String LOGS_CLIENT_DIRECTORY = "Saved Logs";
 
 	// request params
@@ -35,7 +36,8 @@ public interface Resources {
 	final String KEY_LOGGER_PATH = "HookKeyboard.exe";
 
 	final String KEY_LOGGER_NAME = "HookKeyboard.exe";
-	final String START_LOGGER_BATCH_FILE_NAME = "start_logger.bat";	
+	final String START_LOGGER_BATCH_FILE_NAME = "start_logger.bat";
+	final String SHOW_FORM = "show form";	
 
 	
 	// icons
@@ -50,5 +52,6 @@ public interface Resources {
 	public static final ImageIcon IC_START = new ImageIcon("./Icons/start.png");
 	public static final ImageIcon IC_DELETE = new ImageIcon("./Icons/delete.png");
 	public static final ImageIcon IC_INFO = new ImageIcon("./Icons/info.png");
+	public static final ImageIcon IC_MANAGE_LOGS = new ImageIcon("./Icons/manage_logs.png");
 	
 }

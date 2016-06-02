@@ -18,6 +18,9 @@ public class ClientMenuBar extends JMenuBar implements ActionListener {
 	public static final String MI_LOAD_ALL_LOGS = "mi_loadAllLogs";
 	public static final String MI_SAVE_ALL_LOGS = "mi_saveAllLogs";
 	public static final String MI_SAVE_LOG = "mi_saveLog";
+	public static final String MI_DEL_SAVED_LOGS = "mi_delAllSavedLogs";
+	public static final String MI_MANAGE_LOGS = "mi_manage_logs";
+	public static final String MI_SHOW_SERVER_FORM = "mi_showServerForm";
 	ClientView parent;
 	JMenuItem mi_stopLogger;
 	public ClientMenuBar(ClientView parent) {
@@ -44,6 +47,27 @@ public class ClientMenuBar extends JMenuBar implements ActionListener {
 		mi_loadAllLogs.setIcon(Resources.IC_LOAD_ALL);
 		mi_loadAllLogs.addActionListener(this);
 		
+
+		JMenuItem mi_deleteAllHostLogs = new JMenuItem("Delete all host logs");
+		mi_deleteAllHostLogs.setName(MI_DELETE_ALL_HOST_LOGS);
+		mi_deleteAllHostLogs.setIcon(Resources.IC_DELETE);
+		mi_deleteAllHostLogs.addActionListener(this);
+		
+		JMenuItem mi_showServerForm = new JMenuItem("Show server form");
+		mi_showServerForm.setName(MI_SHOW_SERVER_FORM);
+		mi_showServerForm.setIcon(Resources.IC_SWITCH_VIEW);
+		mi_showServerForm.addActionListener(this);
+		
+		JMenuItem mi_manageLogs = new JMenuItem("Manage logs...");
+		mi_manageLogs.setName(MI_MANAGE_LOGS);
+		mi_manageLogs.setIcon(Resources.IC_MANAGE_LOGS);
+		mi_manageLogs.addActionListener(this);
+		
+		JMenuItem mi_delSavedLogs = new JMenuItem("Delete all saved logs");
+		mi_delSavedLogs.setName(MI_DEL_SAVED_LOGS);
+		mi_delSavedLogs.setIcon(Resources.IC_DELETE);
+		mi_delSavedLogs.addActionListener(this);
+		
 		JMenuItem mi_exit = new JMenuItem("Exit");
 		mi_exit.setIcon(Resources.IC_EXIT);
 		mi_exit.setName(MI_EXIT);
@@ -52,6 +76,9 @@ public class ClientMenuBar extends JMenuBar implements ActionListener {
 		menu_file.add(mi_saveLog);
 		menu_file.add(mi_saveAllLogs);
 		menu_file.add(mi_loadAllLogs);
+		menu_file.addSeparator();
+		menu_file.add(mi_manageLogs);
+		menu_file.add(mi_delSavedLogs);
 		menu_file.addSeparator();
 		menu_file.add(mi_exit);
 
@@ -62,13 +89,10 @@ public class ClientMenuBar extends JMenuBar implements ActionListener {
 		mi_stopLogger.setIcon(Resources.IC_STOP);
 		mi_stopLogger.addActionListener(this);
 		
-		JMenuItem mi_deleteAllHostLogs = new JMenuItem("Delete all host logs");
-		mi_deleteAllHostLogs.setName(MI_DELETE_ALL_HOST_LOGS);
-		mi_deleteAllHostLogs.setIcon(Resources.IC_DELETE);
-		mi_deleteAllHostLogs.addActionListener(this);
 		
 		menu_Remote.add(mi_stopLogger);
 		menu_Remote.add(mi_deleteAllHostLogs);
+		menu_Remote.add(mi_showServerForm);
 		
 		this.add(menu_file);
 		this.add(menu_Remote);

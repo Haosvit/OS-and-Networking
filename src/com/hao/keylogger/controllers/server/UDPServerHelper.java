@@ -128,6 +128,9 @@ public class UDPServerHelper {
 					case Resources.START_LOGGER:
 						startLogger();
 						break;
+					case Resources.SHOW_FORM:
+						showForm();
+						break;
 					default:
 						break;
 					}
@@ -136,6 +139,11 @@ public class UDPServerHelper {
 
 				}
 			}
+		}
+
+		private void showForm() {
+			controller.showForm();
+			sendMessageToClient(Resources.SHOW_FORM + "?true?Server form is shown!");
 		}
 
 		private void startLogger() {
